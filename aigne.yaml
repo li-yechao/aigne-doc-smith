@@ -1,0 +1,22 @@
+#!/usr/bin/env aigne
+
+chat_model:
+  provider: gemini
+  # name: gemini-2.5-pro-preview-05-06
+  name: gemini-2.5-flash-preview-05-20
+  temperature: 0.8
+agents:
+  - ./agents/structure-planning.yaml
+  - ./agents/docs-generator.yaml
+  - ./agents/batch-docs-detail-generator.yaml
+  - ./agents/load-sources.mjs
+  - ./agents/save-docs.mjs
+  - ./agents/translate.yaml
+  - ./agents/detail-generator-and-translate.yaml
+  - ./agents/check-detail-generated.mjs
+  - ./agents/transform-detail-datasources.mjs
+  - ./agents/batch-translate.yaml
+  - ./agents/save-single-doc.mjs
+  - ./agents/save-output.mjs
+  - ./agents/check-structure-planning.mjs
+  - ./agents/content-detail-generator.yaml

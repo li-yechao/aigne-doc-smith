@@ -1,0 +1,24 @@
+{
+  "name": "@aigne/doc-smith",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "biome check && pnpm -r run lint",
+    "lint:fix": "biome check --write && pnpm -r run lint"
+  },
+  "type": "module",
+  "bin": "aigne.yaml",
+  "keywords": [],
+  "author": "Arcblock <blocklet@arcblock.io> https://github.com/blocklet",
+  "license": "MIT",
+  "dependencies": {
+    "@aigne/anthropic": "^0.9.3",
+    "@aigne/cli": "^1.24.1",
+    "@aigne/core": "^1.37.0",
+    "@aigne/gemini": "^0.8.3",
+    "@aigne/openai": "^0.10.3",
+    "glob": "^11.0.3"
+  }
+}
