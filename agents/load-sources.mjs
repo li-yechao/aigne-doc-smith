@@ -27,6 +27,7 @@ const DEFAULT_INCLUDE_PATTERNS = [
 ];
 
 const DEFAULT_EXCLUDE_PATTERNS = [
+  "aigne-docs/*",
   "assets/*",
   "data/*",
   "images/*",
@@ -88,7 +89,12 @@ async function loadGitignore(dir) {
  * @param {string[]} gitignorePatterns - .gitignore patterns
  * @returns {Promise<string[]>} Array of file paths
  */
-async function getFilesWithGlob(dir, includePatterns, excludePatterns, gitignorePatterns) {
+async function getFilesWithGlob(
+  dir,
+  includePatterns,
+  excludePatterns,
+  gitignorePatterns
+) {
   // Prepare all ignore patterns
   const allIgnorePatterns = [];
 
@@ -129,7 +135,9 @@ async function getFilesWithGlob(dir, includePatterns, excludePatterns, gitignore
 
     return files;
   } catch (error) {
-    console.warn(`Warning: Error during glob search in ${dir}: ${error.message}`);
+    console.warn(
+      `Warning: Error during glob search in ${dir}: ${error.message}`
+    );
     return [];
   }
 }
@@ -193,7 +201,7 @@ export default async function loadSources({
           dir,
           finalIncludePatterns,
           finalExcludePatterns,
-          gitignorePatterns,
+          gitignorePatterns
         );
         allFiles = allFiles.concat(filesInDir);
       } catch (err) {
@@ -214,7 +222,7 @@ export default async function loadSources({
         sourceId: file,
         content,
       };
-    }),
+    })
   );
 
   // Get the last structure plan result
@@ -270,15 +278,18 @@ loadSources.input_schema = {
     },
     includePatterns: {
       anyOf: [{ type: "string" }, { type: "array", items: { type: "string" } }],
-      description: "Glob patterns to filter files by path or filename. If not set, include all.",
+      description:
+        "Glob patterns to filter files by path or filename. If not set, include all.",
     },
     excludePatterns: {
       anyOf: [{ type: "string" }, { type: "array", items: { type: "string" } }],
-      description: "Glob patterns to exclude files by path or filename. If not set, exclude none.",
+      description:
+        "Glob patterns to exclude files by path or filename. If not set, exclude none.",
     },
     useDefaultPatterns: {
       type: "boolean",
-      description: "Whether to use default include/exclude patterns. Defaults to true.",
+      description:
+        "Whether to use default include/exclude patterns. Defaults to true.",
     },
     currentPath: {
       type: "string",

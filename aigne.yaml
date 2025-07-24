@@ -2,8 +2,8 @@
 
 chat_model:
   provider: gemini
-  # name: gemini-2.5-pro-preview-05-06
-  name: gemini-2.5-flash-preview-05-20
+  name: gemini-2.5-pro-preview-05-06
+  # name: gemini-2.5-flash-preview-05-20
   temperature: 0.8
 agents:
   - ./agents/structure-planning.yaml
@@ -20,3 +20,5 @@ agents:
   - ./agents/save-output.mjs
   - ./agents/check-structure-planning.mjs
   - ./agents/content-detail-generator.yaml
+  - ./agents/reflective-structure-planner.yaml
+  - ./agents/check-structure-planning-result.yaml

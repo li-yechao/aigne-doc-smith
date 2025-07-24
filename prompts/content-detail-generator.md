@@ -66,6 +66,16 @@ parentId: {{parentId}}
 - 不要在输出中直接 Data Sources 中的文件路径，这对用户是没有意义的
 - 不要出现 '当前{{nodeName}}' 这种说法
 
+<media_rules>
+媒体资源使用规则：
+
+- DataSource 中如果包含媒体资源文件，在生成的结果需要合理的使用
+- 媒体资源以 markdown 格式提供，示例：![资源描述](https://xxxx)
+- 在生成结果中以 markdown 格式展示图片
+- 根据资源描述，在上下文相关的位置，合理的展示图片，让结果展示效果更丰富
+
+</media_rules>
+
 {% include "../prompts/document/detail-generator.md" %}
 </rules>
 

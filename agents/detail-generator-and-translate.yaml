@@ -25,6 +25,7 @@ input_schema:
     nodeName:
       type: string
       description: 节点名称
+      default: 部分
     locale:
       type: string
       description: 语言
@@ -50,6 +51,8 @@ input_schema:
       items:
         type: string
         description: 源码路径
+      default:
+        - ./
     includePatterns:
       type: array
       items:
@@ -63,9 +66,11 @@ input_schema:
     outputDir:
       type: string
       description: 输出目录
+      default: ./aigne-docs/output
     docsDir:
       type: string
       description: 文档目录
+      default: ./aigne-docs/docs
     additionalInformation:
       type: string
       description: 额外补充信息

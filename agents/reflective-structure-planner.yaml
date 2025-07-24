@@ -1,0 +1,10 @@
+type: team
+name: reflective-structure-planner
+description: A team of agents that plan the structure of the documentation.
+skills:
+  - structure-planning.yaml
+reflection:
+  reviewer: check-structure-planning-result.yaml
+  is_approved: isValid
+  max_iterations: 3
+  return_last_on_max_iterations: false

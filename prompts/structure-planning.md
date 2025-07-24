@@ -69,7 +69,14 @@ DataSources 使用规则：
 
 2. 内容规划优先展示用户提供的 DataSources 中的信息，或者使用你拥有的知识进行补充，不可以随意虚构信息。
 
-{% include "../prompts/document/structure-planning.md" %}
+{% ifAsync docsType == 'general' %}
+  {% include "../prompts/document/structure-planning.md" %}
+
+{% endif %}
+
+{% ifAsync docsType == 'getting-started' %}
+  {% include "../prompts/document/structure-getting-started.md" %}
+{% endif %}
 
 其他：
 
@@ -77,7 +84,9 @@ DataSources 使用规则：
 2. 使用用户的语言 {{locale}} 返回信息
    </rules>
 
-{% include "../prompts/document/structure-example.md" %}
+{% ifAsync docsType == 'general' %}
+  {% include "../prompts/document/structure-example.md" %}
+{% endif %}
 
 <output_schema>
 参考的输出格式：
