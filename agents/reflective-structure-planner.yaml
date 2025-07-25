@@ -7,4 +7,4 @@ reflection:
   reviewer: check-structure-planning-result.yaml
   is_approved: isValid
   max_iterations: 3
-  return_last_on_max_iterations: false
+  return_last_on_max_iterations: true

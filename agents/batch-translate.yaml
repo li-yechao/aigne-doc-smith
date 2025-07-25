@@ -15,7 +15,7 @@ skills:
       reviewer: ./check-detail-result.mjs
       is_approved: isApproved
       max_iterations: 3
-      return_last_on_max_iterations: false
+      return_last_on_max_iterations: true
 input_schema:
   type: object
   properties:

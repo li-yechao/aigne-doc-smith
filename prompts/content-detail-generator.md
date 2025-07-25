@@ -21,7 +21,7 @@
 </terms>
 
 <structure_plan>
-{{ originalStructurePlan }}
+{{ structurePlan }}
 </structure_plan>
 
 <current>

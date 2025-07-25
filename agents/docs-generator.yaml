@@ -17,7 +17,6 @@ skills:
       $merge([
         $,
         {
-          'originalStructurePlan': structurePlan,
           'structurePlanResult': $map(structurePlan, function($item) {
             $merge([
               $item,
