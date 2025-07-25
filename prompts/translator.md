@@ -61,5 +61,9 @@
 {{content}}
 </content>
 
+<review_feedback>
+{{ detailFeedback }}
+</review_feedback>
+
 指令：
 请将 <content> 中的内容（不包含最外层的 <content> 标签） **准确** 地翻译成 **{{ language }}**，并严格遵循翻译要求。

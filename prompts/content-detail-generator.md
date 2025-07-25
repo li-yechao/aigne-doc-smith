@@ -40,6 +40,10 @@ parentId: {{parentId}}
 <feedback>
 {{feedback}}
 </feedback>
+
+<review_feedback>
+{{ detailFeedback }}
+</review_feedback>
 </current>
 
 <user_rules>

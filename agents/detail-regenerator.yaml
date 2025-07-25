@@ -1,24 +1,41 @@
 type: team
-name: detail-generator-and-translate
+name: detail-regenerator
 description: 生成文档详情并翻译
 skills:
-  - ./transform-detail-datasources.mjs
-  - type: team
-    skills:
-      - ./content-detail-generator.yaml
-      - type: transform
-        jsonata: |
-          $merge([
-            $,
-            { "reviewContent": content }
-          ])
-    reflection:
-      reviewer: ./check-detail-result.mjs
-      is_approved: isApproved
-      max_iterations: 3
-      return_last_on_max_iterations: false
-  - ./batch-translate.yaml
-  - ./save-single-doc.mjs
+  - ./load-sources.mjs
+  - type: transform
+    jsonata: |
+      $merge([
+        $,
+        {
+          'structurePlan': originalStructurePlan,
+          'structurePlanResult': $map(originalStructurePlan, function($item) {
+            $merge([
+              $item,
+              {
+                'translates': [$map(translateLanguages, function($lang) { {"language": $lang} })]
+              }
+            ])
+          })
+        }
+      ])
+  - type: transform
+    jsonata: |
+      (
+        $array := structurePlanResult;
+        $path := currentPath;
+        $foundItem := $array[path=$path][0];
+        $merge([
+            $foundItem,
+            { "originalStructurePlan": originalStructurePlan }
+            
+        ])
+      )
+  # - ./transform-detail-datasources.mjs
+  # - ./content-detail-generator.yaml
+  # - ./batch-translate.yaml
+  # - ./save-single-doc.mjs
+  - ./detail-generator-and-translate.yaml
 input_schema:
   type: object
   properties:

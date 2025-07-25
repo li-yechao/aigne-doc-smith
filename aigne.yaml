@@ -23,3 +23,4 @@ agents:
   - ./agents/reflective-structure-planner.yaml
   - ./agents/check-structure-planning-result.yaml
   - ./agents/input-generator.mjs
+  - ./agents/detail-regenerator.yaml

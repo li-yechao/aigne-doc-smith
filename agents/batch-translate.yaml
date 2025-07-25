@@ -2,7 +2,20 @@ type: team
 name: batch-translate
 description: 批量翻译文档到多个语言
 skills:
-  - ./translate.yaml
+  - type: team
+    skills:
+      - ./translate.yaml
+      - type: transform
+        jsonata: |
+          $merge([
+            $,
+            { "reviewContent": translation }
+          ])
+    reflection:
+      reviewer: ./check-detail-result.mjs
+      is_approved: isApproved
+      max_iterations: 3
+      return_last_on_max_iterations: false
 input_schema:
   type: object
   properties:

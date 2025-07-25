@@ -59,4 +59,35 @@ node tests/load-sources.test.mjs
 - Correctly exclude unwanted files and directories
 - Correctly process .gitignore rules
 - Correctly handle multi-level directory structures
-- Correctly handle non-existent directories 
+- Correctly handle non-existent directories
+
+### check-detail-result.test.mjs
+
+Tests the content validation functionality of the `checkDetailResult` method.
+
+**Test Content:**
+- Verify approval of valid content (e.g., correct links)
+- Verify rejection of content with dead links
+- Verify rejection of content with incorrect table separators
+- Verify approval of external links
+- Verify correct reporting of multiple issues simultaneously
+
+**Run Method:**
+```bash
+node tests/check-detail-result.test.mjs
+```
+
+**Test Scenarios:**
+1.  Define a `structurePlan` with a list of valid internal link paths.
+2.  Call `checkDetailResult` with various content strings that include:
+    -   A valid internal link.
+    -   An invalid or "dead" internal link.
+    -   An incorrectly formatted Markdown table separator.
+    -   A valid external (HTTP) link.
+    -   A combination of the above issues.
+3.  Assert the `isApproved` boolean and the `detailFeedback` string in the result.
+
+**Expected Results:**
+- `isApproved` is `true` if no issues are found.
+- `isApproved` is `false` if any validation rule is violated.
+- `detailFeedback` provides a descriptive message for each validation issue found. 
