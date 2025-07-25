@@ -31,6 +31,14 @@
 {{structurePlanFeedback}}
 </structure_plan_feedback>
 
+<review_structure_plan>
+{{ structurePlan }}
+</review_structure_plan>
+
+<structure_review_feedback>
+{{ structureReviewFeedback }}
+</structure_review_feedback>
+
 <terms>
 专有词汇表，使用时请确保拼写正确。
 
@@ -57,8 +65,9 @@ DataSources 使用规则：
 5. 输出中{{nodeName}}的顺序要符合目标受众的浏览路径, 不需要完全按照 DataSources 中出现的顺序显示，由简单到深入，由了解到探索，路径要合理
 6. 每个{{nodeName}}需要有明确的内容展示规划，不能与其他{{nodeName}}展示重复的内容
 7. 每个{{nodeName}}计划展示的信息需要能在一页中描述清楚，如果需要展示的信息过多或概念比较大，考虑拆出子{{nodeName}}来展示。
-8. 如果提供了上一轮的结构规划和用户反馈，基于用户的反馈在上轮的结果上只要必要的修改，不要大幅变化
+8. 如果提供了上一轮的结构规划和用户反馈，基于用户的反馈在上轮的结果上只做必要的修改，不要大幅变化
 9. 如果提供了上一轮的结构规划，但是没有提供反馈，**直接使用上一轮的结构规划返回**
+10. 如果存在 review feedback ，说明你上一轮生成的结果不符合要求，根据 review feedback 优化生成结果
 
 {{nodeName}}规划规则：
 

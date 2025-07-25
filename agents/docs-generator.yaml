@@ -4,7 +4,14 @@ description: 文档生成
 skills:
   - ./load-sources.mjs
   - ./check-structure-planning.mjs
-  - ./reflective-structure-planner.yaml
+  - type: transform
+    jsonata: |
+      $merge([$, {
+      "saveKey": "structurePlan",
+      "savePath": outputDir,
+      "fileName": "structure-plan.json"
+      }])
+  - ./save-output.mjs
   - type: transform
     jsonata: |
       $merge([
@@ -21,14 +28,6 @@ skills:
           })
         }
       ])
-  - type: transform
-    jsonata: |
-      $merge([$, {
-      "saveKey": "structurePlanResult",
-      "savePath": outputDir,
-      "fileName": "structure-plan.json"
-      }])
-  - ./save-output.mjs
   - ./batch-docs-detail-generator.yaml
   - ./save-docs.mjs
 
@@ -80,6 +79,9 @@ input_schema:
       type: string
       description: 文档类型，支持：general、getting-started、reference、faq
       default: general
+    structurePlanFeedback:
+      type: string
+      description: 结构规划反馈
   required:
     - rules
     - docsDir

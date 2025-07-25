@@ -22,9 +22,9 @@ output_schema:
     isValid:
       type: boolean
       description: 检查是否通过。true 表示通过，false 表示不通过。
-    reason:
+    structureReviewFeedback:
       type: string
       description: 检查结果的详细说明。如果不通过，需要明确指出哪里不符合要求。
   required:
     - isValid
-    - reason
+    - structureReviewFeedback

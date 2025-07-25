@@ -39,6 +39,7 @@
 3.  **验证无关节点的稳定性**：这是最关键的检查。遍历 `structurePlan` 中的所有节点。对于每一个在 `originalStructurePlan` 中也存在、但并未在反馈中被提及的节点：
     *   **至关重要**：其 `path` 属性**必须**与 `originalStructurePlan` 中的完全相同。
     *   理想情况下，其他属性（如 `title`）也应保持稳定，除非这些变更是由某个被要求的变更直接导致的。
+    *   `metadata.sourcesIds` 的变更是允许，可以根据最新的 DataSources 变更依赖的数据源
 </rules>
 
 <output>
