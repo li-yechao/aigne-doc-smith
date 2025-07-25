@@ -24,3 +24,4 @@ agents:
   - ./agents/check-structure-planning-result.yaml
   - ./agents/input-generator.mjs
   - ./agents/detail-regenerator.yaml
+  - ./agents/publish-docs.mjs

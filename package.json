@@ -21,6 +21,7 @@
     "@aigne/core": "^1.38.1",
     "@aigne/gemini": "^0.8.5",
     "@aigne/openai": "^0.10.5",
+    "@aigne/publish-docs": "^0.4.0",
     "glob": "^11.0.3"
   }
 }
