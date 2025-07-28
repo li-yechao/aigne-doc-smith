@@ -58,17 +58,17 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 ```shell
 
 # 生成命令
-npx --no doc-smith run --input @./aigne-docs/input.yaml --format yaml --entry-agent docs-generator --model gemini:gemini-2.5-pro
+npx --no doc-smith run --input @./doc-smith/input.yaml --format yaml --entry-agent docs-generator --model gemini:gemini-2.5-pro
 
 # 重新生成单篇
-npx --no doc-smith run --input @./aigne-docs/input.yaml --format yaml --entry-agent detail-regenerator --input-currentPath /overview --input-feedback "输出只能使用 markdown 格式，不能使用 html 标签" --model gemini:gemini-2.5-pro
+npx --no doc-smith run --input @./doc-smith/input.yaml --format yaml --entry-agent detail-regenerator --input-currentPath /overview --input-feedback "输出只能使用 markdown 格式，不能使用 html 标签" --model gemini:gemini-2.5-pro
 
 # 结构规划优化
-npx --no doc-smith run --input @./aigne-docs/input.yaml --format yaml --entry-agent docs-generator --input-structurePlanFeedback "删除 Contributing 下的子节点，只保留主节点，相关信息在主节点中显示" --model gemini:gemini-2.5-pro
+npx --no doc-smith run --input @./doc-smith/input.yaml --format yaml --entry-agent docs-generator --input-structurePlanFeedback "删除 Contributing 下的子节点，只保留主节点，相关信息在主节点中显示" --model gemini:gemini-2.5-pro
 
 
 # 发布文档
-npx --no doc-smith run --input @./aigne-docs/input.yaml --format yaml --entry-agent publishDocs
+npx --no doc-smith run --input @./doc-smith/input.yaml --format yaml --entry-agent publishDocs
 
 ```
 
