@@ -1,5 +1,5 @@
 type: team
-name: detail-regenerator
+name: regenerator
 description: 生成文档详情并翻译
 skills:
   - ./load-sources.mjs

@@ -1,5 +1,5 @@
 type: team
-name: docs-generator
+name: generator
 description: 文档生成
 skills:
   - ./load-sources.mjs

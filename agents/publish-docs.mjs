@@ -161,7 +161,7 @@ async function saveBoardIdToInput(boardId, newBoardId) {
   }
 }
 
-export default async function publishDocs({ docsDir, appUrl, boardId }) {
+export default async function publish({ docsDir, appUrl, boardId }) {
   const accessToken = await getAccessToken(appUrl);
 
   process.env.DOC_ROOT_DIR = docsDir;

@@ -8,7 +8,7 @@ import { join, dirname } from "node:path";
  * @param {string} params.fileName - File name
  * @returns {Promise<Object>}
  */
-export default async function inputGenerator(
+export default async function init(
   { outputPath = "./doc-smith", fileName = "input2.yaml" },
   options
 ) {
