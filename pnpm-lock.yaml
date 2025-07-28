@@ -9,20 +9,20 @@ importers:
   .:
     dependencies:
       '@aigne/anthropic':
-        specifier: ^0.10.1
-        version: 0.10.1(@libsql/client@0.15.10)
+        specifier: ^0.10.2
+        version: 0.10.2(@libsql/client@0.15.10)(@types/node@24.0.15)
       '@aigne/cli':
-        specifier: ^1.25.1
-        version: 1.25.1(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(listr2@9.0.1)(ws@8.18.3)
+        specifier: ^1.26.0
+        version: 1.26.0(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(listr2@9.0.1)(ws@8.18.3)
       '@aigne/core':
-        specifier: ^1.38.1
-        version: 1.38.1(@libsql/client@0.15.10)
+        specifier: ^1.39.0
+        version: 1.39.0(@libsql/client@0.15.10)(@types/node@24.0.15)
       '@aigne/gemini':
-        specifier: ^0.8.5
-        version: 0.8.5(@libsql/client@0.15.10)(ws@8.18.3)
+        specifier: ^0.8.6
+        version: 0.8.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
       '@aigne/openai':
-        specifier: ^0.10.5
-        version: 0.10.5(@libsql/client@0.15.10)(ws@8.18.3)
+        specifier: ^0.10.6
+        version: 0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
       '@aigne/publish-docs':
         specifier: ^0.4.0
         version: 0.4.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.27)
@@ -41,36 +41,36 @@ importers:
 
 packages:
 
-  '@aigne/agent-library@1.21.5':
-    resolution: {integrity: sha512-gzYIZgI0/IKoMuTn4OPifFpn93FfcfGS2MeNwWLMJtFCzcGeoYYsj9wpdkA6r171G5pI8ptr++QZaa6mfnodHQ==}
+  '@aigne/agent-library@1.21.6':
+    resolution: {integrity: sha512-dKm/UX+CIuq3ita/kvTOXR2GKH9qWrMIc3y0Q7mzkxNqdEIBOEV1njE2xsm06nrAi6nQZSbcY25nMMt36++DXg==}
 
-  '@aigne/agentic-memory@1.0.5':
-    resolution: {integrity: sha512-SdfqzhpFMKQ/NlzZ3CJMdJW39K7zcvVWJNAfzvP2JmMOBjSy7Dup76l8/zafiVXBeamWBpWlRybCreJjdceTyw==}
+  '@aigne/agentic-memory@1.0.6':
+    resolution: {integrity: sha512-iryY60DyHwlPMZC2fl6kSGAGQvGmcUtF9Vhpo1aVhDfg6E1Zx65xCypy7wQkjisY4rMl+xlp39Kabloh7ExWtg==}
 
-  '@aigne/aigne-hub@0.2.1':
-    resolution: {integrity: sha512-I2g54aP+d1h4o6bzFkljIWu9Z4fjZ1lz+37bohonrBUdbhXGxamw7xrF0mHrYRzVbPkTWVcA1T8KZh0vq+lsaQ==}
+  '@aigne/aigne-hub@0.2.2':
+    resolution: {integrity: sha512-ABL4+6dFMqKIa0lDhyb9hb2piU1t48edruj1x0HeHmZHMD0hB5jI3NtVoyilKnTYwpIf0o5BlplhVieNd+akZg==}
 
-  '@aigne/anthropic@0.10.1':
-    resolution: {integrity: sha512-qZP5eUEb5++e4AvvDGaOcxqpGynUIhuTCc48IMhPH4JhAkzQ7NFsD3teoWi7bnYw6WXIJLK2II0x+x+h3bQGAA==}
+  '@aigne/anthropic@0.10.2':
+    resolution: {integrity: sha512-3OuOvjeWefsvh9if18agOJ4vcv7tJ3ROBXOz+ZSRpqaIXvDtPvAYm9EMyMQfPbM8dQeuqo+n0x8cJ7COL8Z3WA==}
 
-  '@aigne/bedrock@0.8.5':
-    resolution: {integrity: sha512-pfW0tjqlXPeWbO109IrC97dHfOxiTLv4AssoHh5HxP0l1Qhv6/tBL6fDH3PPlFHH7t87F1LoHwliFY5UJAbHwA==}
+  '@aigne/bedrock@0.8.6':
+    resolution: {integrity: sha512-aibVnc9xTp1IZAH14Vki4K39iVL596lm4KxlbuhmQQh9HUiIkABviJ3gmo9uI03ccnVcjHZrF+Xt/WHswoFXFg==}
 
-  '@aigne/cli@1.25.1':
-    resolution: {integrity: sha512-+b9nBspTHyLD125vm/9Wd1Xjknug8yOt8leXHbN/PwxU7p9pjM3/pwfF5RopEG4I1Ya6Yamjq35Ikcd2u5MizQ==}
+  '@aigne/cli@1.26.0':
+    resolution: {integrity: sha512-EQU7M1GjFweDjtfafF39Zj8ob62huh2740Wn5BL5gGKuZebDuswoj/sjc5RWXisIbDIlG3c7X9VFOhgON/B4hg==}
     hasBin: true
 
-  '@aigne/core@1.38.1':
-    resolution: {integrity: sha512-eufB46vO4xzRuhaQmkKr8T2ExArIsNXhYrrTwrng1Tuqc5vOjF27m2nS5T7nJE0EyBDWi1XbVXB5g4e+JForNA==}
+  '@aigne/core@1.39.0':
+    resolution: {integrity: sha512-AabcG6ZhsUO4dk9ZcjJQEc0FbVaeLZ55o4PB7J2srO9ebsSCT/5/F7zTmtLQFwk7ERajd6jAyHbAbq5gMOiktA==}
 
-  '@aigne/deepseek@0.7.5':
-    resolution: {integrity: sha512-ELynEtb6qL8NzDz1yOYsoZRtLiAIHZ2jKIpZl2+2bjLso074CrBynqGzji23V/Q3/y4Ik7dvO2liGN0pmqKtSw==}
+  '@aigne/deepseek@0.7.6':
+    resolution: {integrity: sha512-d2/tzcGz2lNlwAIS3rzwX9fwC5RFlIsCGHDEWVREJpExP7Y0aAQb+eicJFf1lvdr+UDaQShhcIBjqzZs6whxaA==}
 
-  '@aigne/default-memory@1.0.5':
-    resolution: {integrity: sha512-k5x0vz2cJD6PGZhlArZ9Wlds3kk14tLg6B1fRPRNQQdllKPuUv6S1EritfafGslWtGL7alrSTGk1vSJxjBibQQ==}
+  '@aigne/default-memory@1.0.6':
+    resolution: {integrity: sha512-7PySXBgncRI3WwIpRI8wzhD0j24Twjc3QVpI/T4m8IvZadSEwUR6uNwf8tY6zTnVhZum5miJ400oZ8xKHb2b4A==}
 
-  '@aigne/gemini@0.8.5':
-    resolution: {integrity: sha512-UcKGYRkZcplwye4LrTm/9BZEia4Ah11ouXLkbkjOODQ8KiS3MgsMBpKJOq24VUCee82hPsRXeLCNTiYdQcfTTw==}
+  '@aigne/gemini@0.8.6':
+    resolution: {integrity: sha512-BlyKbtezSYMC95HUF5uQ3MlQrQNZzVk0AZFNcR+6z3hjiY0ZZ0mNLonSRWl8XbzjWUn11/fzsGCqEcrdeHninQ==}
 
   '@aigne/json-schema-to-zod@1.3.3':
     resolution: {integrity: sha512-8QsF5Vm/Znj16KAvfNIoXghSB7XzGGp+HHoI3CWyuFLX6DbI0YrzRm3EpKo87OhbpdtiWQurC0bidkH2cbsYNQ==}
@@ -87,17 +87,17 @@ packages:
     peerDependencies:
       marked: '>=1 <17'
 
-  '@aigne/observability-api@0.8.1':
-    resolution: {integrity: sha512-0pZvHH8WFj+LzsiC54SGhEAP+LkXk053KB/dfxPNI1GH+hdX+696rzSDxdGy7gBXiptKjschAU3U6oUJpjZeIg==}
+  '@aigne/observability-api@0.8.2':
+    resolution: {integrity: sha512-JCaaGXjQFaQMVNgU/g2FW3pvLaAvWgPcBqBqIho8rfKuNbC7O2z/QcDTOglu4Txwn9Yg8ZRU2fia7FcikqEPpA==}
 
-  '@aigne/ollama@0.7.5':
-    resolution: {integrity: sha512-4cSA9TPaukGiiNjhDSVjT2WWFqEcZPc1RfxtkL1dq198kjMfdS2Agg2EeNYwbPFQ5MJae0nKJB3QNi+L8w/pSQ==}
+  '@aigne/ollama@0.7.6':
+    resolution: {integrity: sha512-pK4iUh4nOFGSmSjiwVKqQbZLQNSR//bai1/XLlsUmnE69jFL2SdoZjA5+zGoUebe8hswXo0YEUdD6Z+9cNo/EA==}
 
-  '@aigne/open-router@0.7.5':
-    resolution: {integrity: sha512-KwwLtpkiQT8d8KYCJN5AfG3m8tILXtJ96V6z1Wpvp/LGjn2hiV3HDHJaBUlxZWDH3DAHyuASZjHWuI9KWhmvmw==}
+  '@aigne/open-router@0.7.6':
+    resolution: {integrity: sha512-QYTPejzSxdPylS/OoJEbPoDvfaKbWxtHIh2b1+1t75EgTqqU2uSVoZtRjDav9xgxnebVXaZSQCX3BVkaIVzbTA==}
 
-  '@aigne/openai@0.10.5':
-    resolution: {integrity: sha512-+bc+9OhXqF5BKFI4vMpdK2FcZMI1ZBsl1lLtBhFmAT6P7s61GXY1vFLBovQNeaI+6n7nvcA0sCL5SFuvbnwyMw==}
+  '@aigne/openai@0.10.6':
+    resolution: {integrity: sha512-7DvpYI9ea9P5fkmL1ct6Dlp9p7qBFWkYFGf00hks/9NkowyktReCNCn1XM6NWpwXx7MW6A77I3C/Ty3lv7qD2w==}
 
   '@aigne/platform-helpers@0.4.0':
     resolution: {integrity: sha512-YqI2Lc/XsvuIR6rARClpgjDp8JO2U3xVYmGRJTVgYDNikMKveX/HgMv7jvjwGMsm3/75KhIxyf5JQ7Pkm1AlkA==}
@@ -108,11 +108,11 @@ packages:
   '@aigne/sqlite@0.4.0':
     resolution: {integrity: sha512-TToJMS/681+GkMFJD8fbXur9J75L9JC381iE8yAUG6p7jxpBijpM8unMTq2mw/R0bT3Z7qwfbgtLkam1sX/jqw==}
 
-  '@aigne/transport@0.10.5':
-    resolution: {integrity: sha512-iGbBW5kEYSaIxlq3H0X3t5Jh+jmlnZ2U8uDKJvqVqvC5gfaJTbp7Z9zQP5GhCf5egc3pQeJL3jakH12Pat/LEQ==}
+  '@aigne/transport@0.10.6':
+    resolution: {integrity: sha512-lFBKKA489brZs2tl0oM5b8ivUjUOX0ObsKkx7NkLLkeqmOz3Ux40FefMj6SXOtaIDiPNXQ911MXGcIH7+dArwQ==}
 
-  '@aigne/xai@0.7.5':
-    resolution: {integrity: sha512-g1TBBb9p3bdpx8z/7rwfNAmzuS6dF3oUe3G55J0BniuPvXHMJrdMj2CS0hHvGocCp3/o/lgW59VY6w313nanaw==}
+  '@aigne/xai@0.7.6':
+    resolution: {integrity: sha512-pNS//BbSaZHBlKXjYFu1WaxZO5Rzn2hdVJN2szQUMhZGqgeqViXtibjuzwiVqGfnV50wutU00PyVu7GLg5oXBA==}
 
   '@anthropic-ai/sdk@0.56.0':
     resolution: {integrity: sha512-SLCB8M8+VMg1cpCucnA1XWHGWqVSZtIWzmOdDOEu3eTFZMB+A0sGZ1ESO5MHDnqrNTXz3safMrWx9x4rMZSOqA==}
@@ -2570,10 +2570,10 @@ packages:
 
 snapshots:
 
-  '@aigne/agent-library@1.21.5(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(ws@8.18.3)':
+  '@aigne/agent-library@1.21.6(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(ws@8.18.3)':
     dependencies:
-      '@aigne/core': 1.38.1(@libsql/client@0.15.10)
-      '@aigne/openai': 0.10.5(@libsql/client@0.15.10)(ws@8.18.3)
+      '@aigne/core': 1.39.0(@libsql/client@0.15.10)(@types/node@24.0.15)
+      '@aigne/openai': 0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
       '@aigne/sqlite': 0.4.0(@opentelemetry/api@1.9.0)
       drizzle-orm: 0.44.3(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)
       fastq: 1.19.1
@@ -2595,6 +2595,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
@@ -2618,11 +2619,11 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@aigne/agentic-memory@1.0.5(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(ws@8.18.3)':
+  '@aigne/agentic-memory@1.0.6(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(ws@8.18.3)':
     dependencies:
-      '@aigne/core': 1.38.1(@libsql/client@0.15.10)
-      '@aigne/default-memory': 1.0.5(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)
-      '@aigne/openai': 0.10.5(@libsql/client@0.15.10)(ws@8.18.3)
+      '@aigne/core': 1.39.0(@libsql/client@0.15.10)(@types/node@24.0.15)
+      '@aigne/default-memory': 1.0.6(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)
+      '@aigne/openai': 0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
       zod: 3.25.76
     transitivePeerDependencies:
       - '@aws-sdk/client-rds-data'
@@ -2637,6 +2638,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
@@ -2660,19 +2662,19 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@aigne/aigne-hub@0.2.1(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(ws@8.18.3)':
+  '@aigne/aigne-hub@0.2.2(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(ws@8.18.3)':
     dependencies:
-      '@aigne/anthropic': 0.10.1(@libsql/client@0.15.10)
-      '@aigne/bedrock': 0.8.5(@libsql/client@0.15.10)
-      '@aigne/core': 1.38.1(@libsql/client@0.15.10)
-      '@aigne/deepseek': 0.7.5(@libsql/client@0.15.10)(ws@8.18.3)
-      '@aigne/default-memory': 1.0.5(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)
-      '@aigne/gemini': 0.8.5(@libsql/client@0.15.10)(ws@8.18.3)
-      '@aigne/ollama': 0.7.5(@libsql/client@0.15.10)(ws@8.18.3)
-      '@aigne/open-router': 0.7.5(@libsql/client@0.15.10)(ws@8.18.3)
-      '@aigne/openai': 0.10.5(@libsql/client@0.15.10)(ws@8.18.3)
-      '@aigne/transport': 0.10.5(@libsql/client@0.15.10)(ws@8.18.3)
-      '@aigne/xai': 0.7.5(@libsql/client@0.15.10)(ws@8.18.3)
+      '@aigne/anthropic': 0.10.2(@libsql/client@0.15.10)(@types/node@24.0.15)
+      '@aigne/bedrock': 0.8.6(@libsql/client@0.15.10)(@types/node@24.0.15)
+      '@aigne/core': 1.39.0(@libsql/client@0.15.10)(@types/node@24.0.15)
+      '@aigne/deepseek': 0.7.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/default-memory': 1.0.6(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)
+      '@aigne/gemini': 0.8.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/ollama': 0.7.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/open-router': 0.7.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/openai': 0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/transport': 0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/xai': 0.7.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
       ufo: 1.6.1
       zod: 3.25.76
     transitivePeerDependencies:
@@ -2688,6 +2690,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
@@ -2712,9 +2715,9 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@aigne/anthropic@0.10.1(@libsql/client@0.15.10)':
+  '@aigne/anthropic@0.10.2(@libsql/client@0.15.10)(@types/node@24.0.15)':
     dependencies:
-      '@aigne/core': 1.38.1(@libsql/client@0.15.10)
+      '@aigne/core': 1.39.0(@libsql/client@0.15.10)(@types/node@24.0.15)
       '@anthropic-ai/sdk': 0.56.0
       ajv: 8.17.1
       jaison: 2.0.2
@@ -2731,6 +2734,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
@@ -2753,9 +2757,9 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@aigne/bedrock@0.8.5(@libsql/client@0.15.10)':
+  '@aigne/bedrock@0.8.6(@libsql/client@0.15.10)(@types/node@24.0.15)':
     dependencies:
-      '@aigne/core': 1.38.1(@libsql/client@0.15.10)
+      '@aigne/core': 1.39.0(@libsql/client@0.15.10)(@types/node@24.0.15)
       '@aws-sdk/client-bedrock-runtime': 3.848.0
       nanoid: 5.1.5
       zod: 3.25.76
@@ -2771,6 +2775,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
@@ -2794,25 +2799,26 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@aigne/cli@1.25.1(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(listr2@9.0.1)(ws@8.18.3)':
+  '@aigne/cli@1.26.0(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(listr2@9.0.1)(ws@8.18.3)':
     dependencies:
-      '@aigne/agent-library': 1.21.5(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(ws@8.18.3)
-      '@aigne/agentic-memory': 1.0.5(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(ws@8.18.3)
-      '@aigne/aigne-hub': 0.2.1(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(ws@8.18.3)
-      '@aigne/anthropic': 0.10.1(@libsql/client@0.15.10)
-      '@aigne/bedrock': 0.8.5(@libsql/client@0.15.10)
-      '@aigne/core': 1.38.1(@libsql/client@0.15.10)
-      '@aigne/deepseek': 0.7.5(@libsql/client@0.15.10)(ws@8.18.3)
-      '@aigne/default-memory': 1.0.5(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)
-      '@aigne/gemini': 0.8.5(@libsql/client@0.15.10)(ws@8.18.3)
+      '@aigne/agent-library': 1.21.6(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/agentic-memory': 1.0.6(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/aigne-hub': 0.2.2(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/anthropic': 0.10.2(@libsql/client@0.15.10)(@types/node@24.0.15)
+      '@aigne/bedrock': 0.8.6(@libsql/client@0.15.10)(@types/node@24.0.15)
+      '@aigne/core': 1.39.0(@libsql/client@0.15.10)(@types/node@24.0.15)
+      '@aigne/deepseek': 0.7.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/default-memory': 1.0.6(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)
+      '@aigne/gemini': 0.8.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
       '@aigne/listr2': 1.0.10
       '@aigne/marked-terminal': 7.3.2(marked@16.1.1)
-      '@aigne/observability-api': 0.8.1(@libsql/client@0.15.10)
-      '@aigne/ollama': 0.7.5(@libsql/client@0.15.10)(ws@8.18.3)
-      '@aigne/open-router': 0.7.5(@libsql/client@0.15.10)(ws@8.18.3)
-      '@aigne/openai': 0.10.5(@libsql/client@0.15.10)(ws@8.18.3)
-      '@aigne/xai': 0.7.5(@libsql/client@0.15.10)(ws@8.18.3)
+      '@aigne/observability-api': 0.8.2(@libsql/client@0.15.10)
+      '@aigne/ollama': 0.7.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/open-router': 0.7.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/openai': 0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/xai': 0.7.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
       '@inquirer/prompts': 7.7.1(@types/node@24.0.15)
+      '@inquirer/type': 3.0.8(@types/node@24.0.15)
       '@listr2/prompt-adapter-inquirer': 3.0.1(@inquirer/prompts@7.7.1(@types/node@24.0.15))(@types/node@24.0.15)(listr2@9.0.1)
       '@modelcontextprotocol/sdk': 1.16.0
       '@ocap/mcrypto': 1.21.0
@@ -2876,11 +2882,12 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@aigne/core@1.38.1(@libsql/client@0.15.10)':
+  '@aigne/core@1.39.0(@libsql/client@0.15.10)(@types/node@24.0.15)':
     dependencies:
       '@aigne/json-schema-to-zod': 1.3.3(zod@3.25.76)
-      '@aigne/observability-api': 0.8.1(@libsql/client@0.15.10)
+      '@aigne/observability-api': 0.8.2(@libsql/client@0.15.10)
       '@aigne/platform-helpers': 0.4.0(@opentelemetry/api@1.9.0)
+      '@inquirer/prompts': 7.7.1(@types/node@24.0.15)
       '@modelcontextprotocol/sdk': 1.16.0
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/sdk-trace-base': 2.0.1(@opentelemetry/api@1.9.0)
@@ -2915,6 +2922,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
@@ -2937,9 +2945,9 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@aigne/deepseek@0.7.5(@libsql/client@0.15.10)(ws@8.18.3)':
+  '@aigne/deepseek@0.7.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)':
     dependencies:
-      '@aigne/openai': 0.10.5(@libsql/client@0.15.10)(ws@8.18.3)
+      '@aigne/openai': 0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
     transitivePeerDependencies:
       - '@aws-sdk/client-rds-data'
       - '@cloudflare/workers-types'
@@ -2952,6 +2960,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
@@ -2975,9 +2984,9 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@aigne/default-memory@1.0.5(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)':
+  '@aigne/default-memory@1.0.6(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)':
     dependencies:
-      '@aigne/core': 1.38.1(@libsql/client@0.15.10)
+      '@aigne/core': 1.39.0(@libsql/client@0.15.10)(@types/node@24.0.15)
       '@aigne/sqlite': 0.4.0(@opentelemetry/api@1.9.0)
       drizzle-orm: 0.44.3(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)
       uuid: 11.1.0
@@ -2996,6 +3005,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
@@ -3018,9 +3028,9 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@aigne/gemini@0.8.5(@libsql/client@0.15.10)(ws@8.18.3)':
+  '@aigne/gemini@0.8.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)':
     dependencies:
-      '@aigne/openai': 0.10.5(@libsql/client@0.15.10)(ws@8.18.3)
+      '@aigne/openai': 0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
     transitivePeerDependencies:
       - '@aws-sdk/client-rds-data'
       - '@cloudflare/workers-types'
@@ -3033,6 +3043,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
@@ -3080,7 +3091,7 @@ snapshots:
       node-emoji: 2.2.0
       supports-hyperlinks: 3.2.0
 
-  '@aigne/observability-api@0.8.1(@libsql/client@0.15.10)':
+  '@aigne/observability-api@0.8.2(@libsql/client@0.15.10)':
     dependencies:
       '@aigne/sqlite': 0.4.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/api': 1.9.0
@@ -3132,9 +3143,9 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@aigne/ollama@0.7.5(@libsql/client@0.15.10)(ws@8.18.3)':
+  '@aigne/ollama@0.7.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)':
     dependencies:
-      '@aigne/openai': 0.10.5(@libsql/client@0.15.10)(ws@8.18.3)
+      '@aigne/openai': 0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
     transitivePeerDependencies:
       - '@aws-sdk/client-rds-data'
       - '@cloudflare/workers-types'
@@ -3147,6 +3158,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
@@ -3170,9 +3182,9 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@aigne/open-router@0.7.5(@libsql/client@0.15.10)(ws@8.18.3)':
+  '@aigne/open-router@0.7.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)':
     dependencies:
-      '@aigne/openai': 0.10.5(@libsql/client@0.15.10)(ws@8.18.3)
+      '@aigne/openai': 0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
     transitivePeerDependencies:
       - '@aws-sdk/client-rds-data'
       - '@cloudflare/workers-types'
@@ -3185,6 +3197,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
@@ -3208,9 +3221,9 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@aigne/openai@0.10.5(@libsql/client@0.15.10)(ws@8.18.3)':
+  '@aigne/openai@0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)':
     dependencies:
-      '@aigne/core': 1.38.1(@libsql/client@0.15.10)
+      '@aigne/core': 1.39.0(@libsql/client@0.15.10)(@types/node@24.0.15)
       ajv: 8.17.1
       jaison: 2.0.2
       nanoid: 5.1.5
@@ -3228,6 +3241,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
@@ -3372,9 +3386,9 @@ snapshots:
       - sqlite3
       - utf-8-validate
 
-  '@aigne/transport@0.10.5(@libsql/client@0.15.10)(ws@8.18.3)':
+  '@aigne/transport@0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)':
     dependencies:
-      '@aigne/openai': 0.10.5(@libsql/client@0.15.10)(ws@8.18.3)
+      '@aigne/openai': 0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
       content-type: 1.0.5
       raw-body: 3.0.0
       zod: 3.25.76
@@ -3390,6 +3404,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
@@ -3413,9 +3428,9 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@aigne/xai@0.7.5(@libsql/client@0.15.10)(ws@8.18.3)':
+  '@aigne/xai@0.7.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)':
     dependencies:
-      '@aigne/openai': 0.10.5(@libsql/client@0.15.10)(ws@8.18.3)
+      '@aigne/openai': 0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
     transitivePeerDependencies:
       - '@aws-sdk/client-rds-data'
       - '@cloudflare/workers-types'
@@ -3428,6 +3443,7 @@ snapshots:
       - '@prisma/client'
       - '@tidbcloud/serverless'
       - '@types/better-sqlite3'
+      - '@types/node'
       - '@types/pg'
       - '@types/sql.js'
       - '@upstash/redis'
