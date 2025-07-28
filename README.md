@@ -57,6 +57,10 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 
 ```shell
 
+# 初始化
+npx --no doc-smith run --entry-agent inputGenerator
+
+
 # 生成命令
 npx --no doc-smith run --input @./doc-smith/input.yaml --format yaml --entry-agent docs-generator --model gemini:gemini-2.5-pro
 

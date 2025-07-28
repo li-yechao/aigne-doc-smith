@@ -1,4 +1,3 @@
-import { createInterface } from "node:readline";
 import { writeFile, mkdir } from "node:fs/promises";
 import { join, dirname } from "node:path";
 
@@ -9,18 +8,10 @@ import { join, dirname } from "node:path";
  * @param {string} params.fileName - File name
  * @returns {Promise<Object>}
  */
-export default async function inputGenerator({
-  outputPath = "./doc-smith",
-  fileName = "input.yaml",
-}) {
-  const rl = createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
-  const question = (query) =>
-    new Promise((resolve) => rl.question(query, resolve));
-
+export default async function inputGenerator(
+  { outputPath = "./doc-smith", fileName = "input2.yaml" },
+  options
+) {
   console.log("Welcome to AIGNE Doc Smith!");
   console.log(
     "I will help you generate a configuration file through several questions.\n"
@@ -31,41 +22,35 @@ export default async function inputGenerator({
 
   // 1. Document generation rules
   console.log("=== Document Generation Rules ===");
-  console.log(
-    "Please describe the document generation rules and requirements (type 'done' to finish multi-line input):"
-  );
-  let rules = "";
-  while (true) {
-    const line = await question("");
-    if (line === "done") break;
-    rules += line + "\n";
-  }
-  input.rules = rules.trim();
+  const rulesInput = await options.prompts.input({
+    message: "Please describe the document generation rules and requirements:",
+  });
+  input.rules = rulesInput.trim();
 
   // 2. Target audience
   console.log("\n=== Target Audience ===");
-  const targetAudienceInput = await question(
-    "What is the target audience? (e.g., developers, users, press Enter to skip):"
-  );
+  const targetAudienceInput = await options.prompts.input({
+    message:
+      "What is the target audience? (e.g., developers, users, press Enter to skip):",
+  });
   input.targetAudience = targetAudienceInput.trim() || "";
 
   // 3. Language settings
   console.log("\n=== Language Settings ===");
-  const localeInput = await question(
-    "Primary language (e.g., en, zh, press Enter to skip):"
-  );
+  const localeInput = await options.prompts.input({
+    message: "Primary language (e.g., en, zh, press Enter to skip):",
+  });
   input.locale = localeInput.trim() || "";
 
   // 4. Translation languages
   console.log("\n=== Translation Settings ===");
-  const translateInput = await question(
-    "Translation language list (comma-separated, e.g., zh,en, press Enter to skip):"
-  );
+  const translateInput = await options.prompts.input({
+    message:
+      "Translation language list (comma-separated, e.g., zh,en, press Enter to skip):",
+  });
   input.translateLanguages = translateInput.trim()
     ? translateInput.split(",").map((lang) => lang.trim())
     : [];
-
-  rl.close();
 
   // Generate YAML content
   const yamlContent = generateYAML(input, outputPath);
