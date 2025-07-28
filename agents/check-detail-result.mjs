@@ -8,7 +8,21 @@ export default async function checkDetailResult({
   let isApproved = true;
   const detailFeedback = [];
 
-  const allowedLinks = new Set(structurePlan.map((item) => item.path));
+  // Create a set of allowed links, including both original paths and processed .md paths
+  const allowedLinks = new Set();
+  structurePlan.forEach((item) => {
+    // Add original path
+    allowedLinks.add(item.path);
+
+    // Add processed .md path (same logic as processContent in utils.mjs)
+    let processedPath = item.path;
+    if (processedPath.startsWith(".")) {
+      processedPath = processedPath.replace(/^\./, "");
+    }
+    let flatPath = processedPath.replace(/^\//, "").replace(/\//g, "-");
+    flatPath = `./${flatPath}.md`;
+    allowedLinks.add(flatPath);
+  });
 
   const checkLinks = (text, source) => {
     let match;
@@ -22,9 +36,6 @@ export default async function checkDetailResult({
 
       // Preserve anchors
       const [path, hash] = trimLink.split("#");
-
-      // Skip if already has extension
-      if (/\.[a-zA-Z0-9]+$/.test(path)) continue;
 
       // Only process relative paths or paths starting with /
       if (!path) continue;

@@ -1,16 +1,17 @@
-import { access } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { AnthropicChatModel } from "@aigne/anthropic";
 import { AIGNE, TeamAgent } from "@aigne/core";
 import { GeminiChatModel } from "@aigne/gemini";
 import { OpenAIChatModel } from "@aigne/openai";
+import checkDetailResult from "./check-detail-result.mjs";
 
 // Get current script directory
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default async function checkDetailGenerated(
-  { path, docsDir, metadata, originalStructurePlan, ...rest },
+  { path, docsDir, metadata, originalStructurePlan, structurePlan, ...rest },
   options
 ) {
   // Check if the detail file already exists
@@ -18,8 +19,12 @@ export default async function checkDetailGenerated(
   const fileFullName = `${flatName}.md`;
   const filePath = join(docsDir, fileFullName);
   let detailGenerated = true;
+  let fileContent = null;
+
   try {
     await access(filePath);
+    // If file exists, read its content for validation
+    fileContent = await readFile(filePath, "utf8");
   } catch {
     detailGenerated = false;
   }
@@ -63,8 +68,21 @@ export default async function checkDetailGenerated(
     }
   }
 
-  // If file exists and sourceIds haven't changed, no need to regenerate
-  if (detailGenerated && !sourceIdsChanged) {
+  // If file exists, check content validation
+  let contentValidationFailed = false;
+  if (detailGenerated && fileContent && structurePlan) {
+    const validationResult = await checkDetailResult({
+      structurePlan,
+      reviewContent: fileContent,
+    });
+
+    if (!validationResult.isApproved) {
+      contentValidationFailed = true;
+    }
+  }
+
+  // If file exists, sourceIds haven't changed, and content validation passes, no need to regenerate
+  if (detailGenerated && !sourceIdsChanged && !contentValidationFailed) {
     return {
       path,
       docsDir,
@@ -102,6 +120,7 @@ export default async function checkDetailGenerated(
     path,
     metadata,
     originalStructurePlan,
+    structurePlan,
   });
 
   return {
