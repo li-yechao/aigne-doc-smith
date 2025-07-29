@@ -81,6 +81,11 @@ input_schema:
     structurePlanFeedback:
       type: string
       description: 结构规划反馈
+    labels:
+      type: array
+      items:
+        type: string
+        description: 标签
   required:
     - rules
     - docsDir

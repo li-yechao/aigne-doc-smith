@@ -43,14 +43,14 @@
 </rules>
 
 <output>
-你的输出必须是一个包含 `isValid` 和 `reason` 的有效 JSON 对象。
+你的输出必须是一个包含 `isValid` 和 `reason` 的有效 JSON 对象，使用 en 返回。
 
 *   **如果两条规则都满足**：
 
     ```json
     {
       "isValid": true,
-      "reason": "新的结构规划正确地实现了用户反馈，并保持了所有无关节点的稳定性。"
+      "reason": "The new structure plan correctly implements user feedback while maintaining stability of all unrelated nodes."
     }
     ```
 
@@ -59,7 +59,7 @@
     ```json
     {
       "isValid": false,
-      "reason": "新的结构规划未能正确实现用户反馈。[请提供具体细节，例如：'反馈要求将 'Introduction' 重命名为 'Overview'，但此项操作未被执行。']"
+      "reason": "The new structure plan fails to correctly implement user feedback. [Please provide specific details, e.g.: 'Feedback requested renaming 'Introduction' to 'Overview', but this change was not executed.']"
     }
     ```
 
@@ -68,7 +68,7 @@
     ```json
     {
       "isValid": false,
-      "reason": "新的结构规划修改了无关节点，这是不允许的。[请提供具体细节，例如：'节点 'API Reference' 的 path 在没有反馈要求的情况下从 '/api' 变更为了 '/reference/api'。这是一个严重错误。']"
+      "reason": "The new structure plan modified unrelated nodes, which is not allowed. [Please provide specific details, e.g.: 'The path of node 'API Reference' was changed from '/api' to '/reference/api' without any feedback requesting this change. This is a critical error.']"
     }
     ```
 *   **如果是首次运行**：
@@ -76,7 +76,7 @@
     ```json
     {
       "isValid": true,
-      "reason": "首次结构规划生成，没有可供比较的旧版本。"
+      "reason": "First structure plan generation, no previous version to compare with."
     }
     ```
 </output>

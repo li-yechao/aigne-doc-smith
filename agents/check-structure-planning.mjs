@@ -44,5 +44,11 @@ export default async function checkStructurePlanning(
     ...rest,
   });
 
-  return result;
+  return {
+    ...result,
+    structurePlanFeedback,
+    originalStructurePlan: originalStructurePlan
+      ? originalStructurePlan
+      : JSON.parse(JSON.stringify(result.structurePlan || [])),
+  };
 }

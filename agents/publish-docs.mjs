@@ -190,7 +190,7 @@ export default async function publish({ docsDir, appUrl, boardId }) {
   };
 }
 
-publishDocs.input_schema = {
+publish.input_schema = {
   type: "object",
   properties: {
     docsDir: {

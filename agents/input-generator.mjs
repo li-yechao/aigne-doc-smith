@@ -9,7 +9,7 @@ import { join, dirname } from "node:path";
  * @returns {Promise<Object>}
  */
 export default async function init(
-  { outputPath = "./doc-smith", fileName = "input2.yaml" },
+  { outputPath = "./doc-smith", fileName = "input.yaml" },
   options
 ) {
   console.log("Welcome to AIGNE Doc Smith!");

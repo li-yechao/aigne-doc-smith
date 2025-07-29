@@ -35,6 +35,7 @@ export function processContent({ content }) {
  * @param {string} params.content - Main document content
  * @param {string} params.docsDir - Root directory
  * @param {Array<{language: string, translation: string}>} [params.translates] - Translation content
+ * @param {Array<string>} [params.labels] - Document labels for front matter
  * @returns {Promise<Array<{ path: string, success: boolean, error?: string }>>}
  */
 export async function saveDocWithTranslations({
@@ -42,6 +43,7 @@ export async function saveDocWithTranslations({
   content,
   docsDir,
   translates = [],
+  labels,
 }) {
   const results = [];
   try {
@@ -50,17 +52,31 @@ export async function saveDocWithTranslations({
     const fileFullName = `${flatName}.md`;
     const filePath = path.join(docsDir, fileFullName);
     await fs.mkdir(docsDir, { recursive: true });
-    await fs.writeFile(filePath, processContent({ content }), "utf8");
+
+    // Add labels front matter if labels are provided
+    let finalContent = processContent({ content });
+    if (labels && labels.length > 0) {
+      const frontMatter = `---\nlabels: ${JSON.stringify(labels)}\n---\n\n`;
+      finalContent = frontMatter + finalContent;
+    }
+
+    await fs.writeFile(filePath, finalContent, "utf8");
     results.push({ path: filePath, success: true });
 
     for (const translate of translates) {
       const translateFileName = `${flatName}.${translate.language}.md`;
       const translatePath = path.join(docsDir, translateFileName);
-      await fs.writeFile(
-        translatePath,
-        processContent({ content: translate.translation }),
-        "utf8"
-      );
+
+      // Add labels front matter to translation content if labels are provided
+      let finalTranslationContent = processContent({
+        content: translate.translation,
+      });
+      if (labels && labels.length > 0) {
+        const frontMatter = `---\nlabels: ${JSON.stringify(labels)}\n---\n\n`;
+        finalTranslationContent = frontMatter + finalTranslationContent;
+      }
+
+      await fs.writeFile(translatePath, finalTranslationContent, "utf8");
       results.push({ path: translatePath, success: true });
     }
   } catch (err) {

@@ -91,6 +91,11 @@ input_schema:
     additionalInformation:
       type: string
       description: 额外补充信息
+    labels:
+      type: array
+      items:
+        type: string
+        description: 标签
 output_schema:
   type: object
   properties:
