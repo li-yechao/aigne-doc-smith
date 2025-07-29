@@ -128,7 +128,7 @@ DataSources 使用规则：
    - 首页 -> /
    - about 页面 -> /about
    - 产品详情页 -> /products/xxx
-6. metadata：每个 {{nodeName}} 的元数据，其中 sourceIds 是关联的数据源，其中必须是 DataSources 中的 sourceId，最少必要和一个 source 关联，不能有虚假的值，不能为空。
+6. metadata：json 对象，每个 {{nodeName}} 的元数据，其中 sourceIds 是关联的数据源，其中必须是 DataSources 中的 sourceId，最少必要和一个 source 关联，不能有虚假的值，不能为空。
 7. 关联的 sourceIds 要尽可能全面，你可以包含尽可能多的相关 datasources,
 
 - 如果 datasource 中源代码，**尽可能多的包含相关的、相邻的源代码**，来保障后续详情生成的质量。
