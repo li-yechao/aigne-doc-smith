@@ -12,8 +12,8 @@ importers:
         specifier: ^0.10.2
         version: 0.10.2(@libsql/client@0.15.10)(@types/node@24.0.15)
       '@aigne/cli':
-        specifier: ^1.26.0
-        version: 1.26.0(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(listr2@9.0.1)(ws@8.18.3)
+        specifier: ^1.27.0
+        version: 1.27.0(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(listr2@9.0.1)(ws@8.18.3)
       '@aigne/core':
         specifier: ^1.39.0
         version: 1.39.0(@libsql/client@0.15.10)(@types/node@24.0.15)
@@ -24,8 +24,8 @@ importers:
         specifier: ^0.10.6
         version: 0.10.6(@libsql/client@0.15.10)(@types/node@24.0.15)(ws@8.18.3)
       '@aigne/publish-docs':
-        specifier: ^0.4.0
-        version: 0.4.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.27)
+        specifier: ^0.5.0
+        version: 0.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.27)
       glob:
         specifier: ^11.0.3
         version: 11.0.3
@@ -47,8 +47,8 @@ packages:
   '@aigne/agentic-memory@1.0.6':
     resolution: {integrity: sha512-iryY60DyHwlPMZC2fl6kSGAGQvGmcUtF9Vhpo1aVhDfg6E1Zx65xCypy7wQkjisY4rMl+xlp39Kabloh7ExWtg==}
 
-  '@aigne/aigne-hub@0.2.2':
-    resolution: {integrity: sha512-ABL4+6dFMqKIa0lDhyb9hb2piU1t48edruj1x0HeHmZHMD0hB5jI3NtVoyilKnTYwpIf0o5BlplhVieNd+akZg==}
+  '@aigne/aigne-hub@0.3.0':
+    resolution: {integrity: sha512-fIkFquJFrSZoz54V41dNTO4IjqzCCZy0MDv6NQe/G7lYTC43tnT/LOjaYBrHILH1uPTc/gpSkohNRK830VdNBA==}
 
   '@aigne/anthropic@0.10.2':
     resolution: {integrity: sha512-3OuOvjeWefsvh9if18agOJ4vcv7tJ3ROBXOz+ZSRpqaIXvDtPvAYm9EMyMQfPbM8dQeuqo+n0x8cJ7COL8Z3WA==}
@@ -56,8 +56,8 @@ packages:
   '@aigne/bedrock@0.8.6':
     resolution: {integrity: sha512-aibVnc9xTp1IZAH14Vki4K39iVL596lm4KxlbuhmQQh9HUiIkABviJ3gmo9uI03ccnVcjHZrF+Xt/WHswoFXFg==}
 
-  '@aigne/cli@1.26.0':
-    resolution: {integrity: sha512-EQU7M1GjFweDjtfafF39Zj8ob62huh2740Wn5BL5gGKuZebDuswoj/sjc5RWXisIbDIlG3c7X9VFOhgON/B4hg==}
+  '@aigne/cli@1.27.0':
+    resolution: {integrity: sha512-8iELVcdd6yVR9TZ8RdH/Sz+k0ttWXB2dLV/lkiQhB4OFCHEx56+Sg4DGiz2Ip8cqTiLffHge7Zlm3DIqStAYzQ==}
     hasBin: true
 
   '@aigne/core@1.39.0':
@@ -102,8 +102,8 @@ packages:
   '@aigne/platform-helpers@0.4.0':
     resolution: {integrity: sha512-YqI2Lc/XsvuIR6rARClpgjDp8JO2U3xVYmGRJTVgYDNikMKveX/HgMv7jvjwGMsm3/75KhIxyf5JQ7Pkm1AlkA==}
 
-  '@aigne/publish-docs@0.4.0':
-    resolution: {integrity: sha512-wSC2Tk0r80XrtIUnFijvPYrvlumDP3rrby0lpF5KVbD9L4mXi6+CPV8BMtijaFravXUXiptI7zS7/thEn/i6WQ==}
+  '@aigne/publish-docs@0.5.0':
+    resolution: {integrity: sha512-3HeKkYafP/O+3A6enXixB49FFCTIPTYivh2Usmy1BQNb7qdoG36jyDZG0+3de4JHifAmFopzjzZ63nO2peAtlw==}
 
   '@aigne/sqlite@0.4.0':
     resolution: {integrity: sha512-TToJMS/681+GkMFJD8fbXur9J75L9JC381iE8yAUG6p7jxpBijpM8unMTq2mw/R0bT3Z7qwfbgtLkam1sX/jqw==}
@@ -2662,7 +2662,7 @@ snapshots:
       - utf-8-validate
       - ws
 
-  '@aigne/aigne-hub@0.2.2(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(ws@8.18.3)':
+  '@aigne/aigne-hub@0.3.0(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(ws@8.18.3)':
     dependencies:
       '@aigne/anthropic': 0.10.2(@libsql/client@0.15.10)(@types/node@24.0.15)
       '@aigne/bedrock': 0.8.6(@libsql/client@0.15.10)(@types/node@24.0.15)
@@ -2799,11 +2799,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@aigne/cli@1.26.0(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(listr2@9.0.1)(ws@8.18.3)':
+  '@aigne/cli@1.27.0(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(listr2@9.0.1)(ws@8.18.3)':
     dependencies:
       '@aigne/agent-library': 1.21.6(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(ws@8.18.3)
       '@aigne/agentic-memory': 1.0.6(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(ws@8.18.3)
-      '@aigne/aigne-hub': 0.2.2(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(ws@8.18.3)
+      '@aigne/aigne-hub': 0.3.0(@libsql/client@0.15.10)(@opentelemetry/api@1.9.0)(@types/node@24.0.15)(ws@8.18.3)
       '@aigne/anthropic': 0.10.2(@libsql/client@0.15.10)(@types/node@24.0.15)
       '@aigne/bedrock': 0.8.6(@libsql/client@0.15.10)(@types/node@24.0.15)
       '@aigne/core': 1.39.0(@libsql/client@0.15.10)(@types/node@24.0.15)
@@ -3322,7 +3322,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@aigne/publish-docs@0.4.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.27)':
+  '@aigne/publish-docs@0.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(yjs@13.6.27)':
     dependencies:
       '@lexical/code': 0.33.1
       '@lexical/headless': 0.33.1
