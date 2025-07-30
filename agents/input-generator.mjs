@@ -31,16 +31,16 @@ export default async function init(
   console.log("\n=== Target Audience ===");
   const targetAudienceInput = await options.prompts.input({
     message:
-      "What is the target audience? (e.g., developers, users, press Enter to skip):",
+      "What is the target audience? (e.g., developers, users, press Enter for default 'developers'):",
   });
-  input.targetAudience = targetAudienceInput.trim() || "";
+  input.targetAudience = targetAudienceInput.trim() || "developers";
 
   // 3. Language settings
   console.log("\n=== Language Settings ===");
   const localeInput = await options.prompts.input({
-    message: "Primary language (e.g., en, zh, press Enter to skip):",
+    message: "Primary language (e.g., en, zh, press Enter for default 'en'):",
   });
-  input.locale = localeInput.trim() || "";
+  input.locale = localeInput.trim() || "en";
 
   // 4. Translation languages
   console.log("\n=== Translation Settings ===");
@@ -89,25 +89,19 @@ export default async function init(
 function generateYAML(input, outputPath) {
   let yaml = "";
 
-  // Add rules
-  if (input.rules) {
-    yaml += `rules: |\n`;
+  // Add rules (required field)
+  yaml += `rules: |\n`;
+  if (input.rules && input.rules.trim()) {
     yaml += `  ${input.rules.split("\n").join("\n  ")}\n\n`;
+  } else {
+    yaml += `  \n\n`;
   }
 
   // Add target audience
-  if (input.targetAudience && input.targetAudience.trim()) {
-    yaml += `targetAudience: ${input.targetAudience}\n`;
-  } else {
-    yaml += `# targetAudience: developers  # Target audience for the documentation (e.g., developers, users)\n`;
-  }
+  yaml += `targetAudience: ${input.targetAudience}\n`;
 
   // Add language settings
-  if (input.locale && input.locale.trim()) {
-    yaml += `locale: ${input.locale}\n`;
-  } else {
-    yaml += `# locale: en  # Primary language for the documentation (e.g., en, zh)\n`;
-  }
+  yaml += `locale: ${input.locale}\n`;
 
   // Add translation languages
   if (
