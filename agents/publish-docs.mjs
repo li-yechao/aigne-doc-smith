@@ -117,7 +117,7 @@ async function getAccessToken(appUrl) {
 }
 
 /**
- * Save boardId to input.yaml file if it was auto-created
+ * Save boardId to config.yaml file if it was auto-created
  * @param {string} boardId - The original boardId (may be empty)
  * @param {string} newBoardId - The boardId returned from publishDocsFn
  */
@@ -130,7 +130,7 @@ async function saveBoardIdToInput(boardId, newBoardId) {
         mkdirSync(docSmithDir, { recursive: true });
       }
 
-      const inputFilePath = join(docSmithDir, "input.yaml");
+      const inputFilePath = join(docSmithDir, "config.yaml");
       let fileContent = "";
 
       // Read existing file content if it exists
@@ -156,12 +156,12 @@ async function saveBoardIdToInput(boardId, newBoardId) {
       await writeFile(inputFilePath, fileContent);
       console.log(`Board ID saved to: ${inputFilePath}`);
     } catch (error) {
-      console.warn("Failed to save board ID to input.yaml:", error.message);
+      console.warn("Failed to save board ID to config.yaml:", error.message);
     }
   }
 }
 
-export default async function publish({ docsDir, appUrl, boardId }) {
+export default async function publishDocs({ docsDir, appUrl, boardId }) {
   const accessToken = await getAccessToken(appUrl);
 
   process.env.DOC_ROOT_DIR = docsDir;
@@ -180,7 +180,7 @@ export default async function publish({ docsDir, appUrl, boardId }) {
     autoCreateBoard: !boardId,
   });
 
-  // Save boardId to input.yaml if it was auto-created
+  // Save boardId to config.yaml if it was auto-created
   await saveBoardIdToInput(boardId, newBoardId);
 
   return {
@@ -190,7 +190,7 @@ export default async function publish({ docsDir, appUrl, boardId }) {
   };
 }
 
-publish.input_schema = {
+publishDocs.input_schema = {
   type: "object",
   properties: {
     docsDir: {
@@ -210,3 +210,5 @@ publish.input_schema = {
     },
   },
 };
+
+publishDocs.description = "Publish the documentation to Discuss Kit";

@@ -9,7 +9,7 @@ import { join, dirname } from "node:path";
  * @returns {Promise<Object>}
  */
 export default async function init(
-  { outputPath = "./doc-smith", fileName = "input.yaml" },
+  { outputPath = "./doc-smith", fileName = "config.yaml" },
   options
 ) {
   console.log("Welcome to AIGNE Doc Smith!");
@@ -130,7 +130,5 @@ function generateYAML(input, outputPath) {
   return yaml;
 }
 
-// Execute the function if this file is run directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  inputGenerator({}).catch(console.error);
-}
+init.description =
+  "Generate a configuration file for the documentation generation process";

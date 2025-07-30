@@ -1,0 +1,13 @@
+type: team
+name: publish
+description: Publish the documentation to Discuss Kit
+skills:
+  - load-config.mjs
+  - publish-docs.mjs
+input_schema:
+  type: object
+  properties:
+    config:
+      type: string
+      description: Path to the config file
+      default: ./doc-smith/config.yaml

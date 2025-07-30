@@ -1,7 +1,8 @@
 type: team
 name: generator
-description: 文档生成
+description: Automatically generates comprehensive project documentation
 skills:
+  - ./load-config.mjs
   - ./load-sources.mjs
   - ./check-structure-planning.mjs
   - type: transform
@@ -34,60 +35,73 @@ skills:
 input_schema:
   type: object
   properties:
-    nodeName:
+    config:
       type: string
-      description: 节点名称
-      default: Section
-    rules:
-      type: string
-      description: 用户的结构规划的要求和规则
-    locale:
-      type: string
-      description: 用户语言，如 zh、en
-    sources:
-      type: array
-      items:
-        type: string
-      description: 用户生成文档的源码文件
-    sourcesPath:
-      type: array
-      items:
-        type: string
-        description: 源码路径
-      default:
-        - ./
-    docsDir:
-      type: string
-      description: 文档保存目录
-      default: ./aigne-docs/docs
-    outputDir:
-      type: string
-      description: 输出目录
-      default: ./aigne-docs/output
-    translateLanguages:
-      type: array
-      items:
-        type: string
-        description: 翻译语言，如 zh、en
+      description: Path to the config file
+      default: ./doc-smith/config.yaml
+    # nodeName:
+    #   type: string
+    #   description: Name of the section to generate documentation for
+    #   default: Section
+    # rules:
+    #   type: string
+    #   description: Documentation generation requirements and rules
+    # locale:
+    #   type: string
+    #   description: Primary language for documentation (e.g., zh, en)
+    # sources:
+    #   type: array
+    #   items:
+    #     type: string
+    #   description: Source code files for documentation generation
+    # sourcesPath:
+    #   type: array
+    #   description: Source code paths
+    #   items:
+    #     type: string
+    #   default:
+    #     - ./
+    # includePatterns:
+    #   type: array
+    #   description: File patterns to include
+    #   items:
+    #     type: string
+    # excludePatterns:
+    #   type: array
+    #   description: File patterns to exclude
+    #   items:
+    #     type: string
+    # docsDir:
+    #   type: string
+    #   description: Directory to save generated documentation
+    #   default: ./doc-smith/docs
+    # outputDir:
+    #   type: string
+    #   description: Output directory for intermediate files
+    #   default: ./doc-smith/output
+    # translateLanguages:
+    #   type: array
+    #   items:
+    #     type: string
+    #     description: Target languages for translation (e.g., zh, en)
     glossary:
       type: string
-      description: 术语表
-    additionalInformation:
-      type: string
-      description: 额外补充信息
-    docsType:
-      type: string
-      description: 文档类型，支持：general、getting-started、reference、faq
-      default: general
+      description: Glossary of terms for consistent terminology
+    # additionalInformation:
+    #   type: string
+    #   description: Additional context or information for documentation
+    # docsType:
+    #   type: string
+    #   description: Type of documentation (general, getting-started, reference, faq)
+    #   default: general
     structurePlanFeedback:
       type: string
-      description: 结构规划反馈
-    labels:
-      type: array
-      items:
-        type: string
-        description: 标签
+      description: Feedback for structure planning adjustments
+    # labels:
+    #   type: array
+    #   items:
+    #     type: string
+    #     description: Tags or labels for categorization
   required:
-    - rules
-    - docsDir
+    - config
 mode: sequential

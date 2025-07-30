@@ -64,8 +64,10 @@ parentId: {{parentId}}
 - 结合当前{{nodeName}}的标题、描述，合理规划{{nodeName}}内容结构，内容要丰富、有条理、有吸引力。
 - 内容风格需要匹配目标受众
 - 明确区分与 structurePlan 其他{{nodeName}}的内容，避免重复，突出本{{nodeName}}的独特价值。
+{% if enforceInfoCompleteness %}
 - 如果 DataSources 相关信息不足，直接返回错误信息，提示用户补充内容，要确保页面内容足够丰富，你可以放心的向用户提出补充信息的要求。
 - 只展示有价值、能吸引用户的信息，如信息不足，提示用户补充信息
+{% endif %}
 - 输出为完整的信息，包含{{nodeName}}计划展示的全部信息。
 - 确保每个{{nodeName}}的详情中，都包含一个 markdown 的一级标题，展示当前{{nodeName}}的标题：{{title}}
 - markdown 输出内容正常换行、添加空行，让内容容易阅读

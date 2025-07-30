@@ -61,17 +61,35 @@ Contributions are welcome! Please feel free to submit a pull request or open an 
 npx --no doc-smith run --entry-agent init
 
 # 生成命令
-npx --no doc-smith run --input @./doc-smith/input.yaml --format yaml --entry-agent generator --model gemini:gemini-2.5-pro
+npx --no doc-smith run --entry-agent generator --model gemini:gemini-2.5-flash
 
 # 重新生成单篇
-npx --no doc-smith run --input @./doc-smith/input.yaml --format yaml --entry-agent regenerator --input-currentPath /overview --input-feedback "输出只能使用 markdown 格式，不能使用 html 标签" --model gemini:gemini-2.5-pro
+npx --no doc-smith run --entry-agent regenerator --input-path bitnet-m4XQ-core-concepts-quantization
 
 # 结构规划优化
-npx --no doc-smith run --input @./doc-smith/input.yaml --format yaml --entry-agent generator --input-structurePlanFeedback "删除 Contributing 下的子节点，只保留主节点，相关信息在主节点中显示" --model gemini:gemini-2.5-pro
+npx --no doc-smith run --input @./doc-smith/config.yaml --format yaml --entry-agent generator --input-structurePlanFeedback "补充节点的 sourceIds，确保所有节点 sourceIds 都有值" --model gemini:gemini-2.5-pro
 
 
 # 发布文档
-npx --no doc-smith run --input @./doc-smith/input.yaml --format yaml --entry-agent publish
+npx --no doc-smith run --input @./doc-smith/config.yaml --format yaml --entry-agent publish
+
+```
+
+使用 `aigne doc` 运行
+
+```shell
+# 初始化
+aigne doc init
+
+# 生成文档
+aigne doc generator
+
+# 优化单篇文档
+aigne doc regenerator --path bitnet-m4XQ-core-concepts-quantization # 可使用 structure-plan.json 中的 path ，或 Discuss Kit 中访问的 path
+
+# 发布文档
+aigne doc publish
+
 
 ```
 
