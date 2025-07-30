@@ -34,6 +34,7 @@ export function processContent({ content }) {
  * @param {string} params.path - Relative path (without extension)
  * @param {string} params.content - Main document content
  * @param {string} params.docsDir - Root directory
+ * @param {string} params.locale - Main content language (e.g., 'en', 'zh', 'fr')
  * @param {Array<{language: string, translation: string}>} [params.translates] - Translation content
  * @param {Array<string>} [params.labels] - Document labels for front matter
  * @returns {Promise<Array<{ path: string, success: boolean, error?: string }>>}
@@ -42,6 +43,7 @@ export async function saveDocWithTranslations({
   path: docPath,
   content,
   docsDir,
+  locale,
   translates = [],
   labels,
 }) {
@@ -49,9 +51,17 @@ export async function saveDocWithTranslations({
   try {
     // Flatten path: remove leading /, replace all / with -
     const flatName = docPath.replace(/^\//, "").replace(/\//g, "-");
-    const fileFullName = `${flatName}.md`;
-    const filePath = path.join(docsDir, fileFullName);
     await fs.mkdir(docsDir, { recursive: true });
+
+    // Helper function to generate filename based on language
+    const getFileName = (language) => {
+      const isEnglish = language === "en";
+      return isEnglish ? `${flatName}.md` : `${flatName}.${language}.md`;
+    };
+
+    // Save main content with appropriate filename based on locale
+    const mainFileName = getFileName(locale);
+    const mainFilePath = path.join(docsDir, mainFileName);
 
     // Add labels front matter if labels are provided
     let finalContent = processContent({ content });
@@ -60,11 +70,12 @@ export async function saveDocWithTranslations({
       finalContent = frontMatter + finalContent;
     }
 
-    await fs.writeFile(filePath, finalContent, "utf8");
-    results.push({ path: filePath, success: true });
+    await fs.writeFile(mainFilePath, finalContent, "utf8");
+    results.push({ path: mainFilePath, success: true });
 
+    // Process all translations
     for (const translate of translates) {
-      const translateFileName = `${flatName}.${translate.language}.md`;
+      const translateFileName = getFileName(translate.language);
       const translatePath = path.join(docsDir, translateFileName);
 
       // Add labels front matter to translation content if labels are provided

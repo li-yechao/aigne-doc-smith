@@ -44,8 +44,9 @@ const DEFAULT_EXCLUDE_PATTERNS = [
   "**/*test/**",
   "**/*tests/**",
   "**/*examples/**",
+  "**/playgrounds/**",
   "v1/**",
-  "**/*dist/**",
+  "**/dist/**",
   "**/*build/**",
   "**/*experimental/**",
   "**/*deprecated/**",
@@ -59,6 +60,7 @@ const DEFAULT_EXCLUDE_PATTERNS = [
   "**/*bin/**",
   "**/*node_modules/**",
   "*.log",
+  "**/*test.*",
 ];
 
 /**

@@ -6,6 +6,7 @@ export default async function saveSingleDoc({
   docsDir,
   translates,
   labels,
+  locale,
 }) {
   const results = await saveDocWithTranslations({
     path,
@@ -13,6 +14,7 @@ export default async function saveSingleDoc({
     docsDir,
     translates,
     labels,
+    locale,
   });
   return { saveSingleDocResult: results };
 }

@@ -23,6 +23,7 @@
 你的主要目标是验证两条关键规则：
 1.  **反馈的实现**：新的结构规划**必须**正确地实现用户反馈中要求的所有变更。
 2.  **无关节点的稳定性**：没有在用户反馈中被提及的节点**绝不能**被修改，特别是它们的 `path` 属性。`path` 是关联现有内容的关键标识符，其稳定性至关重要。
+3.  **数据有效性**: 所有 {{ nodeName }} 都有关联数据源，sourceIds 中都有值。
 </goal>
 
 <rules>
@@ -71,6 +72,15 @@
       "reason": "The new structure plan modified unrelated nodes, which is not allowed. [Please provide specific details, e.g.: 'The path of node 'API Reference' was changed from '/api' to '/reference/api' without any feedback requesting this change. This is a critical error.']"
     }
     ```
+
+*  ** 如果数据无效 **：
+    ```json
+    {
+      "isValid": false,
+      "reason": "The structure plan contains nodes without associated data sources. Each node must have at least one source file linked through sourcesIds."
+    }
+    ```
+
 *   **如果是首次运行**：
 
     ```json

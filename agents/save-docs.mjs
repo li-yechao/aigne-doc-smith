@@ -12,6 +12,7 @@ export default async function saveDocs({
   structurePlanResult: structurePlan,
   docsDir,
   translateLanguages = [],
+  locale,
 }) {
   const results = [];
 
@@ -30,7 +31,8 @@ export default async function saveDocs({
     const cleanupResults = await cleanupInvalidFiles(
       structurePlan,
       docsDir,
-      translateLanguages
+      translateLanguages,
+      locale
     );
     results.push(...cleanupResults);
   } catch (err) {
@@ -41,13 +43,30 @@ export default async function saveDocs({
 }
 
 /**
+ * Generate filename based on flatName and language
+ * @param {string} flatName - Flattened path name
+ * @param {string} language - Language code
+ * @returns {string} - Generated filename
+ */
+function generateFileName(flatName, language) {
+  const isEnglish = language === "en";
+  return isEnglish ? `${flatName}.md` : `${flatName}.${language}.md`;
+}
+
+/**
  * Clean up .md files that are no longer in the structure plan
  * @param {Array<{path: string, title: string}>} structurePlan
  * @param {string} docsDir
  * @param {Array<string>} translateLanguages
+ * @param {string} locale - Main language locale (e.g., 'en', 'zh', 'fr')
  * @returns {Promise<Array<{ path: string, success: boolean, error?: string }>>}
  */
-async function cleanupInvalidFiles(structurePlan, docsDir, translateLanguages) {
+async function cleanupInvalidFiles(
+  structurePlan,
+  docsDir,
+  translateLanguages,
+  locale
+) {
   const results = [];
 
   try {
@@ -61,12 +80,14 @@ async function cleanupInvalidFiles(structurePlan, docsDir, translateLanguages) {
     // Add main document files
     for (const { path } of structurePlan) {
       const flatName = path.replace(/^\//, "").replace(/\//g, "-");
-      const fileName = `${flatName}.md`;
-      expectedFiles.add(fileName);
+
+      // Main language file
+      const mainFileName = generateFileName(flatName, locale);
+      expectedFiles.add(mainFileName);
 
       // Add translation files for each language
       for (const lang of translateLanguages) {
-        const translateFileName = `${flatName}.${lang}.md`;
+        const translateFileName = generateFileName(flatName, lang);
         expectedFiles.add(translateFileName);
       }
     }
