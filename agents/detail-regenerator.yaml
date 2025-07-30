@@ -31,10 +31,7 @@ skills:
             
         ])
       )
-  # - ./transform-detail-datasources.mjs
-  # - ./content-detail-generator.yaml
-  # - ./batch-translate.yaml
-  # - ./save-single-doc.mjs
+  - ./format-structure-plan.mjs
   - ./detail-generator-and-translate.yaml
 input_schema:
   type: object

@@ -4,6 +4,10 @@
 你的任务是根据用户提供的 当前 {{nodeName}}（包含标题、描述、路径）、DataSources、structurePlan（整体结构规划）等信息，生成当前{{nodeName}}的详细内容。
 </goal>
 
+<review_feedback>
+{{ detailFeedback }}
+</review_feedback>
+
 <user_locale>
 {{ locale }}
 </user_locale>
@@ -21,7 +25,7 @@
 </terms>
 
 <structure_plan>
-{{ structurePlan }}
+{{ structurePlanYaml }}
 </structure_plan>
 
 <current>

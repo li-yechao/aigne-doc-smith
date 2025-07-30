@@ -97,47 +97,12 @@ DataSources 使用规则：
   {% include "../prompts/document/structure-example.md" %}
 {% endif %}
 
-<output_schema>
-参考的输出格式：
+<output_rules>
 
-```json
-{
-  structurePlan: [
-    {
-      "title": "xxx",
-      "description": "xxxx",
-      "parentId": "xxx",
-      "path": "xxx",
-      "metadata": {
-        "sourceIds": ["xxx"]
-      }
-      xxx
-    },
-    ...
-  ],
-  structurePlanTree: "xxx"
-}
-```
-
-1. 必须以 json 格式输出数据，确保格式正确
-2. 使用参考 json 格式输出，structurePlan 包含整体的规划结果
-3. 每个{{nodeName}}必须包含：title、description、parentId、path，你可以扩充你觉得有需要的字段
-4. parentId 指向父{{nodeName}}的 path
-5. path 以 RUL 的格式返回，不能为空, 比如以 / 开头
-   好的示例:
-   - 首页 -> /
-   - about 页面 -> /about
-   - 产品详情页 -> /products/xxx
-6. metadata：json 对象，每个 {{nodeName}} 的元数据，其中 sourceIds 是关联的数据源，其中必须是 DataSources 中的 sourceId，最少必要和一个 source 关联，不能有虚假的值，不能为空。
-7. 关联的 sourceIds 要尽可能全面，你可以包含尽可能多的相关 datasources,
+1. 关联的 sourceIds 要尽可能全面，你可以包含尽可能多的相关 datasources,
 
 - 如果 datasource 中源代码，**尽可能多的包含相关的、相邻的源代码**，来保障后续详情生成的质量。
 - 先找到最相关的源代码文件，然后分析其中引用的源代码，引用的文件路径，引用的文件、引用的路径中的文件都需要包含在 sourceIds 中
 - 引用的文件，仍需再分析一层其中引用的源代码文件，添加 sourceIds 中，确保生成详情的上下文完整
 
-8. structurePlanTree 是结构规划的树形结构，用于展示结构规划的层级关系，每一级有不同的缩进，方便用户直观查看结构规划的层级关系,参考格式：
-   ` - 首页
-   - 产品 - 产品详情 - 产品介绍
-     `
-
-</output_schema>
+</output_rules>

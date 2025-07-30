@@ -3,7 +3,7 @@ export default async function checkDetailResult({
   reviewContent,
 }) {
   const linkRegex = /(?<!\!)\[([^\]]+)\]\(([^)]+)\)/g;
-  const tableSeparatorRegex = /\|\s*-\s*\|/g;
+  const tableSeparatorRegex = /^\s*\|\s*-+\s*\|\s*$/;
 
   let isApproved = true;
   const detailFeedback = [];
@@ -44,17 +44,35 @@ export default async function checkDetailResult({
       if (!allowedLinks.has(trimLink)) {
         isApproved = false;
         detailFeedback.push(
-          `Found a dead link in ${source}: [${match[1]}](${trimLink})`
+          `Found a dead link in ${source}: [${match[1]}](${trimLink}), ensure the link exists in the structure plan path`
         );
       }
     }
   };
 
   const checkTableSeparators = (text, source) => {
-    if (tableSeparatorRegex.test(text)) {
+    // Split text into lines and check each line
+    const lines = text.split("\n");
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (tableSeparatorRegex.test(line)) {
+        isApproved = false;
+        detailFeedback.push(
+          `Found an incorrect table separator in ${source} at line ${
+            i + 1
+          }: ${line.trim()}`
+        );
+      }
+    }
+  };
+
+  const checkSingleLine = (text, source) => {
+    // Count newline characters to check if content is only on one line
+    const newlineCount = (text.match(/\n/g) || []).length;
+    if (newlineCount === 0 && text.trim().length > 0) {
       isApproved = false;
       detailFeedback.push(
-        `Found an incorrect table separator in ${source}: | - |`
+        `Found single line content in ${source}: content appears to be on only one line, check for missing line breaks`
       );
     }
   };
@@ -62,6 +80,7 @@ export default async function checkDetailResult({
   // Check content
   checkLinks(reviewContent, "result");
   checkTableSeparators(reviewContent, "result");
+  checkSingleLine(reviewContent, "result");
 
   return {
     isApproved,

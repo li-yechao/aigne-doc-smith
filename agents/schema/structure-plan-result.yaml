@@ -12,7 +12,7 @@ items:
     parentId:
       type:
         - string
-        - 'null'
+        - "null"
     translates:
       type: array
       items:
@@ -21,13 +21,10 @@ items:
           language:
             type: string
             description: 语言代码，比如 zh, en, ja 等
-    metadata:
-      type: object
-      properties:
-        sourceIds:
-          type: array
-          items:
-            type: string
+    sourceIds:
+      type: array
+      items:
+        type: string
       description: 关联的 dataSources 中的 sourceId，用于后续的翻译和内容生成，必须来自 datasources 中的 sourceId，不能有虚假的 id, 不能为空
   required:
     - title

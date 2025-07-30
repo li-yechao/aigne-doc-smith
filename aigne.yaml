@@ -6,8 +6,8 @@ chat_model:
   # name: gemini-2.5-flash-preview-05-20
   temperature: 0.8
 agents:
-  - ./agents/structure-planning.yaml
   - ./agents/docs-generator.yaml
+  - ./agents/structure-planning.yaml
   - ./agents/batch-docs-detail-generator.yaml
   - ./agents/load-sources.mjs
   - ./agents/save-docs.mjs
@@ -25,3 +25,4 @@ agents:
   - ./agents/input-generator.mjs
   - ./agents/detail-regenerator.yaml
   - ./agents/publish-docs.mjs
+  - ./agents/format-structure-plan.mjs

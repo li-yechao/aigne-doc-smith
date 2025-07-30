@@ -11,7 +11,7 @@ import checkDetailResult from "./check-detail-result.mjs";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default async function checkDetailGenerated(
-  { path, docsDir, metadata, originalStructurePlan, structurePlan, ...rest },
+  { path, docsDir, sourceIds, originalStructurePlan, structurePlan, ...rest },
   options
 ) {
   // Check if the detail file already exists
@@ -31,19 +31,15 @@ export default async function checkDetailGenerated(
 
   // Check if sourceIds have changed by comparing with original structure plan
   let sourceIdsChanged = false;
-  if (originalStructurePlan && metadata && metadata.sourceIds) {
+  if (originalStructurePlan && sourceIds) {
     // Find the original node in the structure plan
     const originalNode = originalStructurePlan.find(
       (node) => node.path === path
     );
 
-    if (
-      originalNode &&
-      originalNode.metadata &&
-      originalNode.metadata.sourceIds
-    ) {
-      const originalSourceIds = originalNode.metadata.sourceIds;
-      const currentSourceIds = metadata.sourceIds;
+    if (originalNode && originalNode.sourceIds) {
+      const originalSourceIds = originalNode.sourceIds;
+      const currentSourceIds = sourceIds;
 
       // Compare arrays (order doesn't matter, but content does)
       if (originalSourceIds.length !== currentSourceIds.length) {
@@ -118,7 +114,7 @@ export default async function checkDetailGenerated(
     ...rest,
     docsDir,
     path,
-    metadata,
+    sourceIds,
     originalStructurePlan,
     structurePlan,
   });
