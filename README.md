@@ -73,6 +73,7 @@ npx --no doc-smith run --input @./doc-smith/config.yaml --format yaml --entry-ag
 # 发布文档
 npx --no doc-smith run --input @./doc-smith/config.yaml --format yaml --entry-agent publish
 
+
 ```
 
 使用 `aigne doc` 运行
