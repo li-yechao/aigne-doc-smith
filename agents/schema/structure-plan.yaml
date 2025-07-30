@@ -16,7 +16,7 @@ items:
       description: 父节点 path，如果为 null 则表示是顶级节点
     sourceIds:
       type: array
-      description: 关联的 dataSources 中的 sourceId，用于后续的翻译和内容生成，必须来自 datasources 中的 sourceId，不能有虚假的 id, 不能为空
+      description: 关联的 dataSources 中的 sourceId，用于后续的翻译和内容生成，必须来自 datasources 中的 sourceId，不能有虚假的 id, **不能为空**
       items:
         type: string
   required:

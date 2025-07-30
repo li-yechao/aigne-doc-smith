@@ -37,7 +37,7 @@ input_schema:
     nodeName:
       type: string
       description: 节点名称
-      default: 部分
+      default: Section
     rules:
       type: string
       description: 用户的结构规划的要求和规则

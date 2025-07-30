@@ -4,6 +4,7 @@ export default async function checkDetailResult({
 }) {
   const linkRegex = /(?<!\!)\[([^\]]+)\]\(([^)]+)\)/g;
   const tableSeparatorRegex = /^\s*\|\s*-+\s*\|\s*$/;
+  const codeBlockRegex = /^\s+```(?:\w+)?$/;
 
   let isApproved = true;
   const detailFeedback = [];
@@ -77,10 +78,61 @@ export default async function checkDetailResult({
     }
   };
 
+  const checkCodeBlockIndentation = (text, source) => {
+    // Split text into lines and check each line
+    const lines = text.split("\n");
+    let inCodeBlock = false;
+    let codeBlockIndentLevel = 0;
+    let codeBlockStartLine = 0;
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+
+      // Check if this line is a code block marker
+      if (codeBlockRegex.test(line)) {
+        if (!inCodeBlock) {
+          // Starting a new code block
+          inCodeBlock = true;
+          codeBlockStartLine = i + 1;
+          // Calculate indentation level of the code block marker
+          const match = line.match(/^(\s*)(```)/);
+          codeBlockIndentLevel = match ? match[1].length : 0;
+        } else {
+          // Ending the code block
+          inCodeBlock = false;
+          codeBlockIndentLevel = 0;
+        }
+        continue;
+      }
+
+      // If we're inside a code block, check if content has proper indentation
+      if (inCodeBlock) {
+        const contentIndentLevel = line.match(/^(\s*)/)[1].length;
+
+        // If code block marker has indentation, content should have at least the same indentation
+        if (
+          codeBlockIndentLevel > 0 &&
+          contentIndentLevel < codeBlockIndentLevel
+        ) {
+          isApproved = false;
+          detailFeedback.push(
+            `Found code block with inconsistent indentation in ${source} at line ${codeBlockStartLine}: code block marker has ${codeBlockIndentLevel} spaces indentation but content at line ${
+              i + 1
+            } has only ${contentIndentLevel} spaces indentation`
+          );
+          // Reset to avoid multiple errors for the same code block
+          inCodeBlock = false;
+          codeBlockIndentLevel = 0;
+        }
+      }
+    }
+  };
+
   // Check content
   checkLinks(reviewContent, "result");
   checkTableSeparators(reviewContent, "result");
   checkSingleLine(reviewContent, "result");
+  checkCodeBlockIndentation(reviewContent, "result");
 
   return {
     isApproved,

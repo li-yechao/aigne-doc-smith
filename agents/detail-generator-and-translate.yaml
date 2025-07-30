@@ -25,7 +25,7 @@ input_schema:
     nodeName:
       type: string
       description: 节点名称
-      default: 部分
+      default: Section
     locale:
       type: string
       description: 语言
