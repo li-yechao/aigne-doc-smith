@@ -1,5 +1,7 @@
 type: team
 name: update
+alias:
+  - up
 description: Optimize and regenerate individual document content and translations
 skills:
   - ./load-config.mjs

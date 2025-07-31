@@ -29,15 +29,20 @@ agents:
   - ./agents/load-config.mjs
   - ./agents/team-publish-docs.yaml
   - ./agents/find-item-by-path.mjs
-mcp_server:
-  agents:
-    - ./agents/input-generator.mjs
-    - ./agents/docs-generator.yaml
-    - ./agents/detail-regenerator.yaml
-    - ./agents/publish-docs.mjs
+  - ./docs-mcp/get-docs-structure.mjs
+  - ./docs-mcp/get-docs-detail.mjs
+  - ./docs-mcp/docs-search.yaml
+  - ./docs-mcp/analyze-docs-relevance.yaml
+  - ./docs-mcp/read-doc-content.mjs
+  - ./docs-mcp/analyze-content-relevance.yaml
 cli:
   agents:
     - ./agents/input-generator.mjs
     - ./agents/docs-generator.yaml
     - ./agents/detail-regenerator.yaml
-    - ./agents/publish-docs.mjs
+    - ./agents/team-publish-docs.yaml
+mcp_server:
+  agents:
+    - ./docs-mcp/get-docs-structure.mjs
+    - ./docs-mcp/get-docs-detail.mjs
+    - ./docs-mcp/docs-search.yaml
