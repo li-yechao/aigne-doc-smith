@@ -1,5 +1,8 @@
 type: team
 name: publish
+alias:
+  - pub
+  - p
 description: Publish the documentation to Discuss Kit
 skills:
   - load-config.mjs

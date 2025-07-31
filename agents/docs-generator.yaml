@@ -1,5 +1,8 @@
 type: team
 name: generate
+alias:
+  - gen
+  - g
 description: Automatically generates comprehensive project documentation
 skills:
   - ./load-config.mjs

@@ -95,6 +95,8 @@ aigne doc update --doc-path /faq --feedback "添加更多的 FAQ"
 # 发布文档
 aigne doc publish
 
+# 将文档作为 MCP Server 
+aigne doc serve-mcp
 
 ```
 
