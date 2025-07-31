@@ -64,14 +64,14 @@ npx --no doc-smith run --entry-agent init
 npx --no doc-smith run --entry-agent generator --model gemini:gemini-2.5-flash
 
 # 重新生成单篇
-npx --no doc-smith run --entry-agent regenerator --input-path bitnet-m4XQ-core-concepts-quantization
+npx --no doc-smith run --entry-agent regenerator --input-path bitnet-getting-started
 
 # 结构规划优化
-npx --no doc-smith run --input @./doc-smith/config.yaml --format yaml --entry-agent generator --input-structurePlanFeedback "补充节点的 sourceIds，确保所有节点 sourceIds 都有值" --model gemini:gemini-2.5-pro
+npx --no doc-smith run --entry-agent generator --input-structurePlanFeedback "补充节点的 sourceIds，确保所有节点 sourceIds 都有值" --model gemini:gemini-2.5-pro
 
 
 # 发布文档
-npx --no doc-smith run --input @./doc-smith/config.yaml --format yaml --entry-agent publish
+npx --no doc-smith run --entry-agent publish
 
 
 ```
@@ -85,8 +85,11 @@ aigne doc init
 # 生成文档
 aigne doc generator
 
+# 优化结构规划
+aigne doc generator --structurePlanFeedback "添加一个 FAQ 文档，写至少十个 FAQ"
+
 # 优化单篇文档
-aigne doc regenerator --path bitnet-m4XQ-core-concepts-quantization # 可使用 structure-plan.json 中的 path ，或 Discuss Kit 中访问的 path
+aigne doc regenerator --path abt-did-spec-faq --feedback "添加一个 FAQ 问题，放在第一个位置 ： DID:ABT 是谁开发，答案是 Arcblock 开发的" # 可使用 structure-plan.json 中的 path ，或 Discuss Kit 中访问的 path
 
 # 发布文档
 aigne doc publish

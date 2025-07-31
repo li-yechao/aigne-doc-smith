@@ -1,8 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const docsDir =
-  "/Users/lban/arcblock/code/arcblock-sdk-docs/packages/aigne-framework/docs/";
+const docsDir = path.join(process.cwd(), "doc-smith", "docs");
 
 export default async function getDocDetail({ path: docPath }) {
   try {
@@ -39,4 +38,4 @@ getDocDetail.input_schema = {
   },
 };
 
-getDocDetail.description = "Get AIGNE Framework single docs detail";
+getDocDetail.description = "Get single docs detail";
