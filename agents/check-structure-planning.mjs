@@ -9,11 +9,11 @@ import { OpenAIChatModel } from "@aigne/openai";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default async function checkStructurePlanning(
-  { originalStructurePlan, structurePlanFeedback, ...rest },
+  { originalStructurePlan, feedback, ...rest },
   options
 ) {
   // If originalStructurePlan exists, return directly
-  if (originalStructurePlan && !structurePlanFeedback) {
+  if (originalStructurePlan && !feedback) {
     return {
       structurePlan: originalStructurePlan,
     };
@@ -39,14 +39,14 @@ export default async function checkStructurePlanning(
   const panningAgent = aigne.agents["reflective-structure-planner"];
 
   const result = await options.context.invoke(panningAgent, {
-    structurePlanFeedback,
+    feedback: feedback || "",
     originalStructurePlan,
     ...rest,
   });
 
   return {
     ...result,
-    structurePlanFeedback,
+    feedback: "", // clear feedback
     originalStructurePlan: originalStructurePlan
       ? originalStructurePlan
       : JSON.parse(JSON.stringify(result.structurePlan || [])),

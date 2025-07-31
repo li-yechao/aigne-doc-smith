@@ -1,5 +1,5 @@
 type: team
-name: regenerator
+name: update
 description: Optimize and regenerate individual document content and translations
 skills:
   - ./load-config.mjs
@@ -43,7 +43,7 @@ input_schema:
     glossary:
       type: string
       description: Glossary of terms for consistent terminology
-    path:
+    doc-path:
       type: string
       description: Document path to regenerate
     feedback:

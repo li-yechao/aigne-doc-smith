@@ -11,7 +11,7 @@ input_schema:
     originalStructurePlan:
       $ref: ./schema/structure-plan.yaml
       description: 上一轮生成的结构规划，用于对比。如果不存在，则检查默认通过。
-    structurePlanFeedback:
+    feedback:
       type: string
       description: 用户针对上一轮结果提供的反馈。
   required:
