@@ -39,7 +39,7 @@ export default async function checkStructurePlanning(
   const panningAgent = aigne.agents["reflective-structure-planner"];
 
   const result = await options.context.invoke(panningAgent, {
-    feedback,
+    feedback: feedback || "",
     originalStructurePlan,
     ...rest,
   });

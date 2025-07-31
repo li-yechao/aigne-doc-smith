@@ -86,10 +86,11 @@ aigne doc init
 aigne doc generate
 
 # 优化结构规划
-aigne doc generate --feedback "添加一个 FAQ 文档，写至少十个 FAQ"
+aigne doc generate --feedback "删除 About 文档"
 
 # 优化单篇文档
-aigne doc update --doc-path nunjucks-overview --feedback "添加一个 FAQ 问题，放在第一个位置 ： DID:ABT 是谁开发，答案是 Arcblock 开发的" # 可使用 structure-plan.json 中的 path ，或 Discuss Kit 中访问的 path
+# 可使用 structure-plan.json 中的 path ，或 Discuss Kit 中访问的 path
+aigne doc update --doc-path /faq --feedback "添加更多的 FAQ" 
 
 # 发布文档
 aigne doc publish
