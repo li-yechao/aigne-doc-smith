@@ -29,3 +29,15 @@ agents:
   - ./agents/load-config.mjs
   - ./agents/team-publish-docs.yaml
   - ./agents/find-item-by-path.mjs
+mcp_server:
+  agents:
+    - ./agents/input-generator.mjs
+    - ./agents/docs-generator.yaml
+    - ./agents/detail-regenerator.yaml
+    - ./agents/publish-docs.mjs
+cli:
+  agents:
+    - ./agents/input-generator.mjs
+    - ./agents/docs-generator.yaml
+    - ./agents/detail-regenerator.yaml
+    - ./agents/publish-docs.mjs
