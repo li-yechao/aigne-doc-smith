@@ -13,9 +13,9 @@
 {{ structurePlan }}
 ```
 
-- **用户反馈 (structurePlanFeedback)**:
+- **用户反馈**:
 ```
-{{ structurePlanFeedback }}
+{{ feedback }}
 ```
 </context>
 
@@ -35,12 +35,12 @@
 这是主要场景。你必须执行详细的比较。
 
 **分步分析**：
-1.  **分析反馈**：仔细阅读并理解 `<context>` 中 `structurePlanFeedback` 提供的每一项变更要求。明确哪些节点是需要被修改、添加或删除的目标。
+1.  **分析反馈**：仔细阅读并理解 `<context>` 中 用户反馈 提出的每一项变更要求。明确哪些节点是需要被修改、添加或删除的目标。
 2.  **验证反馈的实现**：对比 `<context>` 中的 `structurePlan` 和 `originalStructurePlan`，确认所要求的变更是否已执行。例如，如果反馈是“移除‘示例’部分”，你必须检查该部分在 `structurePlan` 中是否已不存在。
 3.  **验证无关节点的稳定性**：这是最关键的检查。遍历 `structurePlan` 中的所有节点。对于每一个在 `originalStructurePlan` 中也存在、但并未在反馈中被提及的节点：
     *   **至关重要**：其 `path` 属性**必须**与 `originalStructurePlan` 中的完全相同。
     *   理想情况下，其他属性（如 `title`）也应保持稳定，除非这些变更是由某个被要求的变更直接导致的。
-    *   **`sourcesIds` 的变更是允许的**，可以根据最新的 DataSources 变更依赖的数据源
+    *   **`sourcesIds` 在用户没有明确要求的场景也是允许变更的**，每次结构规划可以根据最新的 DataSources 变更依赖的数据源，sourceIds 不能为空。
 </rules>
 
 <output>

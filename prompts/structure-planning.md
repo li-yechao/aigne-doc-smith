@@ -28,7 +28,7 @@
 </last_structure_plan>
 
 <structure_plan_feedback>
-{{structurePlanFeedback}}
+{{feedback}}
 </structure_plan_feedback>
 
 <review_structure_plan>

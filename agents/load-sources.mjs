@@ -155,7 +155,8 @@ export default async function loadSources({
   excludePatterns,
   outputDir,
   docsDir,
-  currentPath,
+  "doc-path": docPath,
+  boardId,
   useDefaultPatterns = true,
 } = {}) {
   let files = Array.isArray(sources) ? [...sources] : [];
@@ -250,15 +251,32 @@ export default async function loadSources({
 
   // Get the last output result of the specified path
   let content;
-  if (currentPath) {
-    const flatName = currentPath.replace(/^\//, "").replace(/\//g, "-");
-    const fileFullName = `${flatName}.md`;
-    const filePath = path.join(docsDir, fileFullName);
+  if (docPath) {
+    let fileFullName;
+
+    // First try direct path matching (original format)
+    const flatName = docPath.replace(/^\//, "").replace(/\//g, "-");
+    fileFullName = `${flatName}.md`;
+    let filePath = path.join(docsDir, fileFullName);
+
     try {
       await access(filePath);
       content = await readFile(filePath, "utf8");
     } catch {
-      // The file does not exist, content remains undefined
+      // If not found and boardId is provided, try boardId-flattenedPath format
+      if (boardId && docPath.startsWith(`${boardId}-`)) {
+        // Extract the flattened path part after boardId-
+        const flattenedPath = docPath.substring(boardId.length + 1);
+        fileFullName = `${flattenedPath}.md`;
+        filePath = path.join(docsDir, fileFullName);
+
+        try {
+          await access(filePath);
+          content = await readFile(filePath, "utf8");
+        } catch {
+          // The file does not exist, content remains undefined
+        }
+      }
     }
   }
 
@@ -298,9 +316,13 @@ loadSources.input_schema = {
       description:
         "Whether to use default include/exclude patterns. Defaults to true.",
     },
-    currentPath: {
+    "doc-path": {
       type: "string",
-      description: "The current path of the document",
+      description: "The document path to load content for",
+    },
+    boardId: {
+      type: "string",
+      description: "The board ID for boardId-flattenedPath format matching",
     },
   },
   required: [],

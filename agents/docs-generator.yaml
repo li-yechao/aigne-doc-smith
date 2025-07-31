@@ -1,5 +1,5 @@
 type: team
-name: generator
+name: generate
 description: Automatically generates comprehensive project documentation
 skills:
   - ./load-config.mjs
@@ -94,7 +94,7 @@ input_schema:
     #   type: string
     #   description: Type of documentation (general, getting-started, reference, faq)
     #   default: general
-    structurePlanFeedback:
+    feedback:
       type: string
       description: Feedback for structure planning adjustments
     # labels:
