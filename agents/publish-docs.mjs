@@ -154,7 +154,6 @@ async function saveBoardIdToInput(boardId, newBoardId) {
       }
 
       await writeFile(inputFilePath, fileContent);
-      console.log(`Board ID saved to: ${inputFilePath}`);
     } catch (error) {
       console.warn("Failed to save board ID to config.yaml:", error.message);
     }
