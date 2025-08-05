@@ -1,5 +1,34 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { execSync } from "node:child_process";
+import { existsSync, mkdirSync } from "node:fs";
+import { parse } from "yaml";
+import {
+  DEFAULT_INCLUDE_PATTERNS,
+  DEFAULT_EXCLUDE_PATTERNS,
+} from "./constants.mjs";
+
+/**
+ * Normalize path to absolute path for consistent comparison
+ * @param {string} filePath - The path to normalize
+ * @returns {string} - Absolute path
+ */
+export function normalizePath(filePath) {
+  return path.isAbsolute(filePath)
+    ? filePath
+    : path.resolve(process.cwd(), filePath);
+}
+
+/**
+ * Convert path to relative path from current working directory
+ * @param {string} filePath - The path to convert
+ * @returns {string} - Relative path
+ */
+export function toRelativePath(filePath) {
+  return path.isAbsolute(filePath)
+    ? path.relative(process.cwd(), filePath)
+    : filePath;
+}
 
 export function processContent({ content }) {
   // Match markdown regular links [text](link), exclude images ![text](link)
@@ -94,4 +123,274 @@ export async function saveDocWithTranslations({
     results.push({ path: docPath, success: false, error: err.message });
   }
   return results;
+}
+
+/**
+ * Get current git HEAD commit hash
+ * @returns {string} - The current git HEAD commit hash
+ */
+export function getCurrentGitHead() {
+  try {
+    return execSync("git rev-parse HEAD", {
+      encoding: "utf8",
+      stdio: ["pipe", "pipe", "ignore"],
+    }).trim();
+  } catch (error) {
+    // Not in git repository or git command failed
+    console.warn("Failed to get git HEAD:", error.message);
+    return null;
+  }
+}
+
+/**
+ * Save git HEAD to config.yaml file
+ * @param {string} gitHead - The current git HEAD commit hash
+ */
+export async function saveGitHeadToConfig(gitHead) {
+  if (!gitHead) {
+    return; // Skip if no git HEAD available
+  }
+
+  try {
+    const docSmithDir = path.join(process.cwd(), "doc-smith");
+    if (!existsSync(docSmithDir)) {
+      mkdirSync(docSmithDir, { recursive: true });
+    }
+
+    const inputFilePath = path.join(docSmithDir, "config.yaml");
+    let fileContent = "";
+
+    // Read existing file content if it exists
+    if (existsSync(inputFilePath)) {
+      fileContent = await fs.readFile(inputFilePath, "utf8");
+    }
+
+    // Check if lastGitHead already exists in the file
+    const lastGitHeadRegex = /^lastGitHead:\s*.*$/m;
+    const newLastGitHeadLine = `lastGitHead: ${gitHead}`;
+
+    if (lastGitHeadRegex.test(fileContent)) {
+      // Replace existing lastGitHead line
+      fileContent = fileContent.replace(lastGitHeadRegex, newLastGitHeadLine);
+    } else {
+      // Add lastGitHead to the end of file
+      if (fileContent && !fileContent.endsWith("\n")) {
+        fileContent += "\n";
+      }
+      fileContent += newLastGitHeadLine + "\n";
+    }
+
+    await fs.writeFile(inputFilePath, fileContent);
+  } catch (error) {
+    console.warn("Failed to save git HEAD to config.yaml:", error.message);
+  }
+}
+
+/**
+ * Check if files have been modified between two git commits
+ * @param {string} fromCommit - Starting commit hash
+ * @param {string} toCommit - Ending commit hash (defaults to HEAD)
+ * @param {Array<string>} filePaths - Array of file paths to check
+ * @returns {Array<string>} - Array of modified file paths
+ */
+export function getModifiedFilesBetweenCommits(
+  fromCommit,
+  toCommit = "HEAD",
+  filePaths = []
+) {
+  try {
+    // Get all modified files between commits
+    const modifiedFiles = execSync(
+      `git diff --name-only ${fromCommit}..${toCommit}`,
+      {
+        encoding: "utf8",
+        stdio: ["pipe", "pipe", "ignore"],
+      }
+    )
+      .trim()
+      .split("\n")
+      .filter(Boolean);
+
+    // Filter to only include files we care about
+    if (filePaths.length === 0) {
+      return modifiedFiles;
+    }
+
+    return modifiedFiles.filter((file) =>
+      filePaths.some((targetPath) => {
+        const absoluteFile = normalizePath(file);
+        const absoluteTarget = normalizePath(targetPath);
+        return absoluteFile === absoluteTarget;
+      })
+    );
+  } catch (error) {
+    console.warn(
+      `Failed to get modified files between ${fromCommit} and ${toCommit}:`,
+      error.message
+    );
+    return [];
+  }
+}
+
+/**
+ * Check if any source files have changed based on modified files list
+ * @param {Array<string>} sourceIds - Source file paths
+ * @param {Array<string>} modifiedFiles - List of modified files between commits
+ * @returns {boolean} - True if any source files have changed
+ */
+export function hasSourceFilesChanged(sourceIds, modifiedFiles) {
+  if (!sourceIds || sourceIds.length === 0 || !modifiedFiles) {
+    return false; // No source files or no modified files
+  }
+
+  return modifiedFiles.some((modifiedFile) =>
+    sourceIds.some((sourceId) => {
+      const absoluteModifiedFile = normalizePath(modifiedFile);
+      const absoluteSourceId = normalizePath(sourceId);
+      return absoluteModifiedFile === absoluteSourceId;
+    })
+  );
+}
+
+/**
+ * Check if there are any added or deleted files between two git commits that match the include/exclude patterns
+ * @param {string} fromCommit - Starting commit hash
+ * @param {string} toCommit - Ending commit hash (defaults to HEAD)
+ * @param {Array<string>} includePatterns - Include patterns to match files
+ * @param {Array<string>} excludePatterns - Exclude patterns to filter files
+ * @returns {boolean} - True if there are relevant added/deleted files
+ */
+export function hasFileChangesBetweenCommits(
+  fromCommit,
+  toCommit = "HEAD",
+  includePatterns = DEFAULT_INCLUDE_PATTERNS,
+  excludePatterns = DEFAULT_EXCLUDE_PATTERNS
+) {
+  try {
+    // Get file changes with status (A=added, D=deleted, M=modified)
+    const changes = execSync(
+      `git diff --name-status ${fromCommit}..${toCommit}`,
+      {
+        encoding: "utf8",
+        stdio: ["pipe", "pipe", "ignore"],
+      }
+    )
+      .trim()
+      .split("\n")
+      .filter(Boolean);
+
+    // Only check for added (A) and deleted (D) files
+    const addedOrDeletedFiles = changes
+      .filter((line) => {
+        const [status, filePath] = line.split(/\s+/);
+        return (status === "A" || status === "D") && filePath;
+      })
+      .map((line) => line.split(/\s+/)[1]);
+
+    if (addedOrDeletedFiles.length === 0) {
+      return false;
+    }
+
+    // Check if any of the added/deleted files match the include patterns and don't match exclude patterns
+    return addedOrDeletedFiles.some((filePath) => {
+      // Check if file matches any include pattern
+      const matchesInclude = includePatterns.some((pattern) => {
+        // Convert glob pattern to regex for matching
+        const regexPattern = pattern
+          .replace(/\./g, "\\.")
+          .replace(/\*/g, ".*")
+          .replace(/\?/g, ".");
+        const regex = new RegExp(regexPattern);
+        return regex.test(filePath);
+      });
+
+      if (!matchesInclude) {
+        return false;
+      }
+
+      // Check if file matches any exclude pattern
+      const matchesExclude = excludePatterns.some((pattern) => {
+        // Convert glob pattern to regex for matching
+        const regexPattern = pattern
+          .replace(/\./g, "\\.")
+          .replace(/\*/g, ".*")
+          .replace(/\?/g, ".");
+        const regex = new RegExp(regexPattern);
+        return regex.test(filePath);
+      });
+
+      return !matchesExclude;
+    });
+  } catch (error) {
+    console.warn(
+      `Failed to check file changes between ${fromCommit} and ${toCommit}:`,
+      error.message
+    );
+    return false;
+  }
+}
+
+/**
+ * Load config from config.yaml file
+ * @returns {Promise<Object|null>} - The config object or null if file doesn't exist
+ */
+export async function loadConfigFromFile() {
+  const configPath = path.join(process.cwd(), "doc-smith", "config.yaml");
+
+  try {
+    if (!existsSync(configPath)) {
+      return null;
+    }
+
+    const configContent = await fs.readFile(configPath, "utf8");
+    return parse(configContent);
+  } catch (error) {
+    console.warn("Failed to read config file:", error.message);
+    return null;
+  }
+}
+
+/**
+ * Save value to config.yaml file
+ * @param {string} key - The config key to save
+ * @param {string} value - The value to save
+ */
+export async function saveValueToConfig(key, value) {
+  if (!value) {
+    return; // Skip if no value provided
+  }
+
+  try {
+    const docSmithDir = path.join(process.cwd(), "doc-smith");
+    if (!existsSync(docSmithDir)) {
+      mkdirSync(docSmithDir, { recursive: true });
+    }
+
+    const configPath = path.join(docSmithDir, "config.yaml");
+    let fileContent = "";
+
+    // Read existing file content if it exists
+    if (existsSync(configPath)) {
+      fileContent = await fs.readFile(configPath, "utf8");
+    }
+
+    // Check if key already exists in the file
+    const keyRegex = new RegExp(`^${key}:\\s*.*$`, "m");
+    const newKeyLine = `${key}: ${value}`;
+
+    if (keyRegex.test(fileContent)) {
+      // Replace existing key line
+      fileContent = fileContent.replace(keyRegex, newKeyLine);
+    } else {
+      // Add key to the end of file
+      if (fileContent && !fileContent.endsWith("\n")) {
+        fileContent += "\n";
+      }
+      fileContent += newKeyLine + "\n";
+    }
+
+    await fs.writeFile(configPath, fileContent);
+  } catch (error) {
+    console.warn(`Failed to save ${key} to config.yaml:`, error.message);
+  }
 }

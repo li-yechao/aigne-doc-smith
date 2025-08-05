@@ -1,67 +1,14 @@
 import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { glob } from "glob";
-
-// Default file patterns for inclusion and exclusion
-const DEFAULT_INCLUDE_PATTERNS = [
-  "*.py",
-  "*.js",
-  "*.jsx",
-  "*.ts",
-  "*.tsx",
-  "*.go",
-  "*.java",
-  "*.pyi",
-  "*.pyx",
-  "*.c",
-  "*.cc",
-  "*.cpp",
-  "*.h",
-  "*.md",
-  "*.rst",
-  "*.json",
-  "*Dockerfile",
-  "*Makefile",
-  "*.yaml",
-  "*.yml",
-];
-
-const DEFAULT_EXCLUDE_PATTERNS = [
-  "aigne-docs/**",
-  "doc-smith/**",
-  "assets/**",
-  "data/**",
-  "images/**",
-  "public/**",
-  "static/**",
-  "**/vendor/**",
-  "temp/**",
-  "**/*docs/**",
-  "**/*doc/**",
-  "**/*venv/**",
-  "*.venv/**",
-  "*test*",
-  "**/*test/**",
-  "**/*tests/**",
-  "**/*examples/**",
-  "**/playgrounds/**",
-  "v1/**",
-  "**/dist/**",
-  "**/*build/**",
-  "**/*experimental/**",
-  "**/*deprecated/**",
-  "**/*misc/**",
-  "**/*legacy/**",
-  ".git/**",
-  ".github/**",
-  ".next/**",
-  ".vscode/**",
-  "**/*obj/**",
-  "**/*bin/**",
-  "**/*node_modules/**",
-  "*.log",
-  "**/*test.*",
-];
+import {
+  getCurrentGitHead,
+  getModifiedFilesBetweenCommits,
+} from "../utils/utils.mjs";
+import {
+  DEFAULT_INCLUDE_PATTERNS,
+  DEFAULT_EXCLUDE_PATTERNS,
+} from "../utils/constants.mjs";
 
 /**
  * Load .gitignore patterns from a directory
@@ -158,6 +105,7 @@ export default async function loadSources({
   "doc-path": docPath,
   boardId,
   useDefaultPatterns = true,
+  lastGitHead,
 } = {}) {
   let files = Array.isArray(sources) ? [...sources] : [];
 
@@ -224,9 +172,11 @@ export default async function loadSources({
   const sourceFiles = await Promise.all(
     files.map(async (file) => {
       const content = await readFile(file, "utf8");
-      allSources += `// sourceId: ${file}\n${content}\n`;
+      // Convert absolute path to relative path from project root
+      const relativePath = path.relative(process.cwd(), file);
+      allSources += `// sourceId: ${relativePath}\n${content}\n`;
       return {
-        sourceId: file,
+        sourceId: relativePath,
         content,
       };
     })
@@ -280,12 +230,34 @@ export default async function loadSources({
     }
   }
 
+  // Get git change detection data
+  let modifiedFiles = [];
+  let currentGitHead = null;
+
+  if (lastGitHead) {
+    try {
+      currentGitHead = getCurrentGitHead();
+      if (currentGitHead && currentGitHead !== lastGitHead) {
+        modifiedFiles = getModifiedFilesBetweenCommits(
+          lastGitHead,
+          currentGitHead
+        );
+        console.log(
+          `Detected ${modifiedFiles.length} modified files since last generation`
+        );
+      }
+    } catch (error) {
+      console.warn("Failed to detect git changes:", error.message);
+    }
+  }
+
   return {
     datasourcesList: sourceFiles,
     datasources: allSources,
     content,
     originalStructurePlan,
     files,
+    modifiedFiles,
   };
 }
 
@@ -324,6 +296,10 @@ loadSources.input_schema = {
       type: "string",
       description: "The board ID for boardId-flattenedPath format matching",
     },
+    lastGitHead: {
+      type: "string",
+      description: "The git HEAD from last generation for change detection",
+    },
   },
   required: [],
 };
@@ -348,6 +324,11 @@ loadSources.output_schema = {
       type: "array",
       items: { type: "string" },
       description: "Array of file paths that were loaded",
+    },
+    modifiedFiles: {
+      type: "array",
+      items: { type: "string" },
+      description: "Array of modified files since last generation",
     },
   },
 };
