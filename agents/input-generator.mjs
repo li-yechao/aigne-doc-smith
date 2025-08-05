@@ -1,4 +1,4 @@
-import { writeFile, mkdir } from "node:fs/promises";
+import { writeFile, mkdir, readFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
 
 // Predefined document generation styles
@@ -41,9 +41,16 @@ const TARGET_AUDIENCES = {
  * @returns {Promise<Object>}
  */
 export default async function init(
-  { outputPath = "./doc-smith", fileName = "config.yaml" },
+  { outputPath = "./doc-smith", fileName = "config.yaml", skipIfExists = false },
   options
 ) {
+  if (skipIfExists) {
+    const filePath = join(outputPath, fileName);
+    if (await readFile(filePath, "utf8").catch(() => null)) {
+      return {}
+    }
+  }
+
   console.log("🚀 Welcome to AIGNE Doc Smith!");
   console.log("Let's create your documentation configuration.\n");
 

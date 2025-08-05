@@ -4,6 +4,9 @@ alias:
   - up
 description: Optimize and regenerate individual document content and translations
 skills:
+  - url: ./input-generator.mjs
+    default_input:
+      skipIfExists: true
   - ./load-config.mjs
   - ./load-sources.mjs
   - type: transform

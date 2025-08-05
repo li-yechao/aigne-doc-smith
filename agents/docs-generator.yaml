@@ -5,6 +5,9 @@ alias:
   - g
 description: Automatically generates comprehensive project documentation
 skills:
+  - url: ./input-generator.mjs
+    default_input:
+      skipIfExists: true
   - ./load-config.mjs
   - ./load-sources.mjs
   - ./check-structure-planning.mjs

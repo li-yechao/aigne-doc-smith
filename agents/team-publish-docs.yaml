@@ -5,6 +5,9 @@ alias:
   - p
 description: Publish the documentation to Discuss Kit
 skills:
+  - url: ./input-generator.mjs
+    default_input:
+      skipIfExists: true
   - load-config.mjs
   - publish-docs.mjs
 input_schema:
