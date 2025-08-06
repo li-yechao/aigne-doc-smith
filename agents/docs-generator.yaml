@@ -10,16 +10,15 @@ skills:
       skipIfExists: true
   - ./load-config.mjs
   - ./load-sources.mjs
-  - ./check-structure-planning.mjs
+  - ./check-structure-plan.mjs
+  - url: ./save-output.mjs
+    default_input:
+      saveKey: structurePlan
+      savePath:
+        $get: outputDir
+      fileName: structure-plan.json
   - type: transform
-    jsonata: |
-      $merge([$, {
-      "saveKey": "structurePlan",
-      "savePath": outputDir,
-      "fileName": "structure-plan.json"
-      }])
-  - ./save-output.mjs
-  - type: transform
+    name: transformData
     jsonata: |
       $merge([
         $,
@@ -103,6 +102,9 @@ input_schema:
     feedback:
       type: string
       description: Feedback for structure planning adjustments
+    forceRegenerate:
+      type: string
+      description: Force regenerate the documentation
     # labels:
     #   type: array
     #   items:

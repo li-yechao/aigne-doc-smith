@@ -63,8 +63,10 @@ npx --no doc-smith run --entry-agent init
 # 生成命令
 npx --no doc-smith run --entry-agent generate --model gemini:gemini-2.5-flash
 
+aigne run --path /Users/lban/arcblock/code/aigne-doc-smith/ --entry-agent generate --model gemini:gemini-2.5-flash --input-forceRegenerate=true
+
 # 重新生成单篇
-npx --no doc-smith run --entry-agent update --input-path bitnet-getting-started
+npx --no doc-smith run --entry-agent update --input-doc-path bitnet-getting-started
 
 # 结构规划优化
 npx --no doc-smith run --entry-agent generate --input-feedback "补充节点的 sourceIds，确保所有节点 sourceIds 都有值" --model gemini:gemini-2.5-pro
