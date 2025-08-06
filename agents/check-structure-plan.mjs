@@ -3,8 +3,8 @@ import {
   hasFileChangesBetweenCommits,
 } from "../utils/utils.mjs";
 
-export default async function checkStructurePlanning(
-  { originalStructurePlan, feedback, lastGitHead, ...rest },
+export default async function checkStructurePlan(
+  { originalStructurePlan, feedback, lastGitHead, forceRegenerate, ...rest },
   options
 ) {
   // Check if we need to regenerate structure plan
@@ -43,13 +43,18 @@ export default async function checkStructurePlanning(
   }
 
   // If no regeneration needed, return original structure plan
-  if (originalStructurePlan && !feedback && !shouldRegenerate) {
+  if (
+    originalStructurePlan &&
+    !feedback &&
+    !shouldRegenerate &&
+    forceRegenerate !== "true"
+  ) {
     return {
       structurePlan: originalStructurePlan,
     };
   }
 
-  const panningAgent = options.context.agents["reflective-structure-planner"];
+  const panningAgent = options.context.agents["reflectiveStructurePlanner"];
 
   const result = await options.context.invoke(panningAgent, {
     feedback: finalFeedback || "",

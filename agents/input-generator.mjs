@@ -1,37 +1,15 @@
 import { writeFile, mkdir, readFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
+import chalk from "chalk";
+import { validatePath, getAvailablePaths } from "../utils/utils.mjs";
+import {
+  SUPPORTED_LANGUAGES,
+  DOCUMENT_STYLES,
+  TARGET_AUDIENCES,
+} from "../utils/constants.mjs";
 
-// Predefined document generation styles
-const DOCUMENT_STYLES = {
-  actionFirst: {
-    name: "Action-First Style",
-    rules:
-      "Action-first and task-oriented; steps first, copyable examples, minimal context; second person, active voice, short sentences",
-  },
-  conceptFirst: {
-    name: "Concept-First Style",
-    rules:
-      "Why/What before How; precise and restrained, provide trade-offs and comparisons; support with architecture/flow/sequence diagrams",
-  },
-  specReference: {
-    name: "Spec-Reference Style",
-    rules:
-      "Objective and precise, no rhetoric; tables/Schema focused, authoritative fields and defaults; clear error codes and multi-language examples",
-  },
-  custom: {
-    name: "Custom Rules",
-    rules: "Enter your own documentation generation rules",
-  },
-};
-
-// Predefined target audiences
-const TARGET_AUDIENCES = {
-  actionFirst: "Developers, Implementation Engineers, DevOps",
-  conceptFirst:
-    "Architects, Technical Leads, Developers interested in principles",
-  generalUsers: "General Users",
-  custom: "Enter your own target audience",
-};
+// UI constants
+const PRESS_ENTER_TO_FINISH = "Press Enter to finish";
 
 /**
  * Guide users through multi-turn dialogue to collect information and generate YAML configuration
@@ -41,17 +19,21 @@ const TARGET_AUDIENCES = {
  * @returns {Promise<Object>}
  */
 export default async function init(
-  { outputPath = "./doc-smith", fileName = "config.yaml", skipIfExists = false },
+  {
+    outputPath = "./doc-smith",
+    fileName = "config.yaml",
+    skipIfExists = false,
+  },
   options
 ) {
   if (skipIfExists) {
     const filePath = join(outputPath, fileName);
     if (await readFile(filePath, "utf8").catch(() => null)) {
-      return {}
+      return {};
     }
   }
 
-  console.log("🚀 Welcome to AIGNE Doc Smith!");
+  console.log("🚀 Welcome to AIGNE DocSmith!");
   console.log("Let's create your documentation configuration.\n");
 
   // Collect user information
@@ -78,7 +60,6 @@ export default async function init(
   } else {
     // Use predefined style directly
     rules = DOCUMENT_STYLES[styleChoice].rules;
-    console.log(`✅ Selected: ${DOCUMENT_STYLES[styleChoice].name}`);
   }
 
   input.rules = rules.trim();
@@ -104,58 +85,105 @@ export default async function init(
   } else {
     // Use predefined audience directly
     targetAudience = TARGET_AUDIENCES[audienceChoice];
-    console.log(`✅ Selected: ${TARGET_AUDIENCES[audienceChoice]}`);
   }
 
   input.targetAudience = targetAudience.trim();
 
   // 3. Language settings
   console.log("\n🌐 Step 3/6: Primary Language");
-  const localeInput = await options.prompts.input({
-    message:
-      "Primary documentation language (e.g., en, zh, press Enter for 'en'):",
+
+  // Let user select primary language from supported list
+  const primaryLanguageChoice = await options.prompts.select({
+    message: "Choose primary documentation language:",
+    choices: SUPPORTED_LANGUAGES.map((lang) => ({
+      name: `${lang.label} - ${lang.sample}`,
+      value: lang.code,
+    })),
   });
-  input.locale = localeInput.trim() || "en";
+
+  input.locale = primaryLanguageChoice;
 
   // 4. Translation languages
   console.log("\n🔄 Step 4/6: Translation Languages");
-  console.log(
-    "Enter additional languages for translation (press Enter to skip):"
+
+  // Filter out the primary language from available choices
+  const availableTranslationLanguages = SUPPORTED_LANGUAGES.filter(
+    (lang) => lang.code !== primaryLanguageChoice
   );
-  const translateLanguages = [];
-  while (true) {
-    const langInput = await options.prompts.input({
-      message: `Language ${translateLanguages.length + 1} (e.g., zh, ja, fr):`,
-    });
-    if (!langInput.trim()) {
-      break;
-    }
-    translateLanguages.push(langInput.trim());
-  }
-  input.translateLanguages = translateLanguages;
+
+  const translateLanguageChoices = await options.prompts.checkbox({
+    message: "Select translation languages:",
+    choices: availableTranslationLanguages.map((lang) => ({
+      name: `${lang.label} - ${lang.sample}`,
+      value: lang.code,
+    })),
+  });
+
+  input.translateLanguages = translateLanguageChoices;
 
   // 5. Documentation directory
   console.log("\n📁 Step 5/6: Output Directory");
   const docsDirInput = await options.prompts.input({
-    message: `Where to save generated docs (press Enter for '${outputPath}/docs'):`,
+    message: `Where to save generated docs:`,
+    default: `${outputPath}/docs`,
   });
   input.docsDir = docsDirInput.trim() || `${outputPath}/docs`;
 
   // 6. Source code paths
   console.log("\n🔍 Step 6/6: Source Code Paths");
-  console.log(
-    "Enter paths to analyze for documentation (press Enter to use './'):"
-  );
+  console.log("Enter paths to analyze for documentation (e.g., ./src, ./lib)");
+  console.log("💡 If no paths are configured, './' will be used as default");
 
   const sourcePaths = [];
   while (true) {
-    const pathInput = await options.prompts.input({
-      message: `Path ${sourcePaths.length + 1} (e.g., ./src, ./lib):`,
+    const selectedPath = await options.prompts.search({
+      message: "Path:",
+      source: async (input, { signal }) => {
+        if (!input || input.trim() === "") {
+          return [
+            {
+              name: "Press Enter to finish",
+              value: "",
+              description: "",
+            },
+          ];
+        }
+
+        const searchTerm = input.trim();
+
+        // Search for matching files and folders in current directory
+        const availablePaths = getAvailablePaths(searchTerm);
+
+        return [...availablePaths];
+      },
     });
-    if (!pathInput.trim()) {
+
+    // Check if user chose to exit
+    if (
+      !selectedPath ||
+      selectedPath.trim() === "" ||
+      selectedPath === "Press Enter to finish"
+    ) {
       break;
     }
-    sourcePaths.push(pathInput.trim());
+
+    const trimmedPath = selectedPath.trim();
+
+    // Use validatePath to check if path is valid
+    const validation = validatePath(trimmedPath);
+
+    if (!validation.isValid) {
+      console.log(`⚠️ ${validation.error}`);
+      continue;
+    }
+
+    // Avoid duplicate paths
+    if (sourcePaths.includes(trimmedPath)) {
+      console.log(`⚠️ Path already exists: ${trimmedPath}`);
+      continue;
+    }
+
+    sourcePaths.push(trimmedPath);
   }
 
   // If no paths entered, use default
@@ -173,18 +201,17 @@ export default async function init(
     await mkdir(dirPath, { recursive: true });
 
     await writeFile(filePath, yamlContent, "utf8");
-    console.log(`\n🎉 Configuration saved to: ${filePath}`);
+    console.log(`\n🎉 Configuration saved to: ${chalk.cyan(filePath)}`);
     console.log(
       "💡 You can edit the configuration file anytime to modify settings."
     );
     console.log(
-      "🚀 Run 'aigne doc generate' to start documentation generation!"
+      `🚀 Run ${chalk.cyan(
+        "'aigne doc generate'"
+      )} to start documentation generation!`
     );
 
-    return {
-      inputGeneratorStatus: true,
-      inputGeneratorPath: filePath,
-    };
+    return {};
   } catch (error) {
     console.error(`❌ Failed to save configuration file: ${error.message}`);
     return {

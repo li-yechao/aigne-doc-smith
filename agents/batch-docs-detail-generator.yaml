@@ -1,8 +1,8 @@
 type: team
-name: batch-docs-detail-generator
+name: batchDocsDetailGenerator
 description: 批量生成文档详情
 skills:
-  - ./check-detail-generated.mjs
+  - ./check-detail.mjs
 input_schema:
   type: object
   properties:
@@ -15,4 +15,5 @@ input_schema:
       items: { type: string }
       description: Array of modified files since last generation
 iterate_on: structurePlanResult
+concurrency: 3
 mode: sequential
