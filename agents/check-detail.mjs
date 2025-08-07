@@ -106,7 +106,7 @@ export default async function checkDetail(
     !sourceIdsChanged &&
     !sourceFilesChanged &&
     !contentValidationFailed &&
-    forceRegenerate !== "true"
+    !forceRegenerate
   ) {
     return {
       path,
@@ -137,3 +137,5 @@ export default async function checkDetail(
     result,
   };
 }
+
+checkDetail.taskTitle = "Check if '{{ title }}' needs regeneration";
