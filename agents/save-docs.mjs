@@ -45,41 +45,41 @@ export default async function saveDocs({
     console.error("Failed to cleanup invalid .md files:", err.message);
   }
 
-  //   const message = `## ✅ Documentation Generated Successfully!
+  const message = `## ✅ Documentation Generated Successfully!
 
-  // Successfully generated **${structurePlan.length}** documents and saved to: \`${docsDir}\`
+  Successfully generated **${structurePlan.length}** documents and saved to: \`${docsDir}\`
 
-  // ### 🚀 Next Steps
+  ### 🚀 Next Steps
 
-  // 1. Publish Documentation
+  1. Publish Documentation
 
-  //    \`\`\`bash
-  //    aigne doc publish
-  //    \`\`\`
+     \`\`\`bash
+     aigne doc publish
+     \`\`\`
 
-  //    Get an online preview link to share with your team
+     Get an online preview link to share with your team
 
-  // ### 🔧 Optional Improvements
+  ### 🔧 Optional Improvements
 
-  // 1. Update Specific Documents
+  1. Update Specific Documents
 
-  //    \`\`\`bash
-  //    aigne doc update
-  //    \`\`\`
+     \`\`\`bash
+     aigne doc update
+     \`\`\`
 
-  //    Regenerate content for specific documents
+     Regenerate content for specific documents
 
-  // 2. Provide Structure Feedback
-  //    \`\`\`bash
-  //    aigne doc generate --feedback "Your feedback on document structure"
-  //    \`\`\`
-  //    Improve the overall documentation structure
+  2. Provide Structure Feedback
+     \`\`\`bash
+     aigne doc generate --feedback "Your feedback on document structure"
+     \`\`\`
+     Improve the overall documentation structure
 
-  // ---
-  // `;
+  ---
+  `;
 
   return {
-    // message,
+    message,
   };
 }
 

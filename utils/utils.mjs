@@ -595,7 +595,12 @@ function getDirectoryContents(dirPath, searchTerm = "") {
 
     for (const entry of entries) {
       const entryName = entry.name;
-      const relativePath = path.join(dirPath, entryName);
+
+      // Preserve ./ prefix when dirPath is "./"
+      let relativePath = path.join(dirPath, entryName);
+      if (dirPath?.startsWith("./")) {
+        relativePath = `./${relativePath}`;
+      }
 
       // Filter by search term if provided
       if (
