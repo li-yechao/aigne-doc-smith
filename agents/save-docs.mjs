@@ -1,6 +1,7 @@
 import { writeFile, readdir, unlink } from "node:fs/promises";
 import { join } from "node:path";
 import { getCurrentGitHead, saveGitHeadToConfig } from "../utils/utils.mjs";
+import { shutdownMermaidWorkerPool } from "../utils/mermaid-worker-pool.mjs";
 
 /**
  * @param {Object} params
@@ -14,6 +15,7 @@ export default async function saveDocs({
   docsDir,
   translateLanguages = [],
   locale,
+  projectInfoMessage,
 }) {
   const results = [];
   // Save current git HEAD to config.yaml for change detection
@@ -47,8 +49,9 @@ export default async function saveDocs({
 
   const message = `## ✅ Documentation Generated Successfully!
 
-  Successfully generated **${structurePlan.length}** documents and saved to: \`${docsDir}\`
-
+  Successfully generated **${structurePlan.length}** documents and saved to:
+  \`${docsDir}\`
+  ${projectInfoMessage || ""}
   ### 🚀 Next Steps
 
   1. Publish Documentation
@@ -77,6 +80,13 @@ export default async function saveDocs({
 
   ---
   `;
+
+  // Shutdown mermaid worker pool to ensure clean exit
+  try {
+    await shutdownMermaidWorkerPool();
+  } catch (error) {
+    console.warn("Failed to shutdown mermaid worker pool:", error.message);
+  }
 
   return {
     message,
