@@ -1,13 +1,12 @@
-import { join } from "node:path";
-import { joinURL } from "ufo";
-import open from "open";
-import { publishDocs as publishDocsFn } from "@aigne/publish-docs";
-import { createConnect } from "@aigne/cli/utils/load-aigne.js";
 import { existsSync, mkdirSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
+import { basename, join } from "node:path";
+import { createConnect } from "@aigne/aigne-hub";
+import { publishDocs as publishDocsFn } from "@aigne/publish-docs";
+import open from "open";
+import { joinURL } from "ufo";
 import { parse, stringify } from "yaml";
-import { basename } from "node:path";
 import { loadConfigFromFile, saveValueToConfig } from "../utils/utils.mjs";
 
 const WELLKNOWN_SERVICE_PATH_PREFIX = "/.well-known/service";
@@ -35,7 +34,7 @@ async function getAccessToken(appUrl) {
         const data = await readFile(DOC_SMITH_ENV_FILE, "utf8");
         if (data.includes("DOC_DISCUSS_KIT_ACCESS_TOKEN")) {
           const envs = parse(data);
-          if (envs[hostname] && envs[hostname].DOC_DISCUSS_KIT_ACCESS_TOKEN) {
+          if (envs[hostname]?.DOC_DISCUSS_KIT_ACCESS_TOKEN) {
             accessToken = envs[hostname].DOC_DISCUSS_KIT_ACCESS_TOKEN;
           }
         }
@@ -115,7 +114,7 @@ export default async function publishDocs(
   // Check if appUrl is default and not saved in config (only when not using env variable)
   const config = await loadConfigFromFile();
   const isDefaultAppUrl = appUrl === DEFAULT_APP_URL;
-  const hasAppUrlInConfig = config && config.appUrl;
+  const hasAppUrlInConfig = config?.appUrl;
 
   if (!useEnvAppUrl && isDefaultAppUrl && !hasAppUrlInConfig) {
     const choice = await options.prompts.select({
@@ -161,11 +160,7 @@ export default async function publishDocs(
   };
 
   try {
-    const {
-      success,
-      boardId: newBoardId,
-      docsUrl,
-    } = await publishDocsFn({
+    const { success, boardId: newBoardId } = await publishDocsFn({
       sidebarPath,
       accessToken,
       appUrl,

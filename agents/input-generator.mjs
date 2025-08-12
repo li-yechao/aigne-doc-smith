@@ -1,18 +1,19 @@
-import { writeFile, mkdir, readFile } from "node:fs/promises";
-import { join, dirname } from "node:path";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname, join } from "node:path";
 import chalk from "chalk";
 import {
-  validatePath,
-  getAvailablePaths,
-  getProjectInfo,
-} from "../utils/utils.mjs";
-import {
-  SUPPORTED_LANGUAGES,
   DOCUMENT_STYLES,
+  SUPPORTED_LANGUAGES,
   TARGET_AUDIENCES,
 } from "../utils/constants.mjs";
+import {
+  getAvailablePaths,
+  getProjectInfo,
+  validatePath,
+} from "../utils/utils.mjs";
+
 // UI constants
-const PRESS_ENTER_TO_FINISH = "Press Enter to finish";
+const _PRESS_ENTER_TO_FINISH = "Press Enter to finish";
 
 /**
  * Guide users through multi-turn dialogue to collect information and generate YAML configuration
@@ -132,7 +133,7 @@ export default async function init(
   while (true) {
     const selectedPath = await options.prompts.search({
       message: "Path:",
-      source: async (input, { signal }) => {
+      source: async (input) => {
         if (!input || input.trim() === "") {
           return [
             {
@@ -242,7 +243,7 @@ function generateYAML(input) {
 
   // Add rules (required field)
   yaml += `rules: |\n`;
-  if (input.rules && input.rules.trim()) {
+  if (input.rules?.trim()) {
     yaml += `  ${input.rules.split("\n").join("\n  ")}\n\n`;
   } else {
     yaml += `  \n\n`;

@@ -42,7 +42,7 @@ export default async function findItemByPath(
       // Let user select a file
       const selectedFile = await options.prompts.search({
         message: getActionText(isTranslate, "Select a document to {action}:"),
-        source: async (input, { signal }) => {
+        source: async (input) => {
           if (!input || input.trim() === "") {
             return mainLanguageFiles.map((file) => ({
               name: file,
@@ -159,7 +159,7 @@ export default async function findItemByPath(
   }
 
   // Add feedback to result if provided
-  if (userFeedback && userFeedback.trim()) {
+  if (userFeedback?.trim()) {
     result.feedback = userFeedback.trim();
   }
 
