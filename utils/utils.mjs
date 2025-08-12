@@ -83,6 +83,7 @@ export async function saveDocWithTranslations({
   locale,
   translates = [],
   labels,
+  isTranslate = false,
 }) {
   const results = [];
   try {
@@ -96,20 +97,22 @@ export async function saveDocWithTranslations({
       return isEnglish ? `${flatName}.md` : `${flatName}.${language}.md`;
     };
 
-    // Save main content with appropriate filename based on locale
-    const mainFileName = getFileName(locale);
-    const mainFilePath = path.join(docsDir, mainFileName);
+    // Save main content with appropriate filename based on locale (skip if isTranslate is true)
+    if (!isTranslate) {
+      const mainFileName = getFileName(locale);
+      const mainFilePath = path.join(docsDir, mainFileName);
 
-    // Add labels front matter if labels are provided
-    let finalContent = processContent({ content });
-    if (labels && labels.length > 0) {
-      const frontMatter = `---\nlabels: ${JSON.stringify(labels)}\n---\n\n`;
-      finalContent = frontMatter + finalContent;
+      // Add labels front matter if labels are provided
+      let finalContent = processContent({ content });
+      if (labels && labels.length > 0) {
+        const frontMatter = `---\nlabels: ${JSON.stringify(labels)}\n---\n\n`;
+        finalContent = frontMatter + finalContent;
+      }
+
+      await fs.writeFile(mainFilePath, finalContent, "utf8");
+      results.push({ path: mainFilePath, success: true });
+      console.log(chalk.green(`Saved: ${chalk.cyan(mainFilePath)}`));
     }
-
-    await fs.writeFile(mainFilePath, finalContent, "utf8");
-    results.push({ path: mainFilePath, success: true });
-    console.log(chalk.green(`Saved: ${chalk.cyan(mainFilePath)}`));
 
     // Process all translations
     for (const translate of translates) {
@@ -368,10 +371,11 @@ export async function loadConfigFromFile() {
  * Save value to config.yaml file
  * @param {string} key - The config key to save
  * @param {string} value - The value to save
+ * @param {string} [comment] - Optional comment to add above the key
  */
-export async function saveValueToConfig(key, value) {
-  if (!value) {
-    return; // Skip if no value provided
+export async function saveValueToConfig(key, value, comment) {
+  if (value === undefined) {
+    return; // Skip if value is undefined
   }
 
   try {
@@ -389,17 +393,38 @@ export async function saveValueToConfig(key, value) {
     }
 
     // Check if key already exists in the file
-    const keyRegex = new RegExp(`^${key}:\\s*.*$`, "m");
-    const newKeyLine = `${key}: ${value}`;
+    const lines = fileContent.split("\n");
+    const keyRegex = new RegExp(`^${key}:\\s*.*$`);
+    const newKeyLine = `${key}: "${value}"`;
 
-    if (keyRegex.test(fileContent)) {
+    const keyIndex = lines.findIndex((line) => keyRegex.test(line));
+
+    if (keyIndex !== -1) {
       // Replace existing key line
-      fileContent = fileContent.replace(keyRegex, newKeyLine);
+      lines[keyIndex] = newKeyLine;
+      fileContent = lines.join("\n");
+
+      // Add comment if provided and not already present
+      if (
+        comment &&
+        keyIndex > 0 &&
+        !lines[keyIndex - 1].trim().startsWith("# ")
+      ) {
+        // Add comment above the key if it doesn't already have one
+        lines.splice(keyIndex, 0, `# ${comment}`);
+        fileContent = lines.join("\n");
+      }
     } else {
       // Add key to the end of file
       if (fileContent && !fileContent.endsWith("\n")) {
         fileContent += "\n";
       }
+
+      // Add comment if provided
+      if (comment) {
+        fileContent += `# ${comment}\n`;
+      }
+
       fileContent += newKeyLine + "\n";
     }
 
@@ -654,4 +679,79 @@ function getDirectoryContents(dirPath, searchTerm = "") {
     );
     return [];
   }
+}
+
+/**
+ * Get GitHub repository information
+ * @param {string} repoUrl - The repository URL
+ * @returns {Promise<Object>} - Repository information
+ */
+export async function getGitHubRepoInfo(repoUrl) {
+  try {
+    // Extract owner and repo from GitHub URL
+    const match = repoUrl.match(
+      /github\.com[\/:]([^\/]+)\/([^\/]+?)(?:\.git)?$/
+    );
+    if (!match) return null;
+
+    const [, owner, repo] = match;
+    const apiUrl = `https://api.github.com/repos/${owner}/${repo}`;
+
+    const response = await fetch(apiUrl);
+    if (!response.ok) return null;
+
+    const data = await response.json();
+    return {
+      name: data.name,
+      description: data.description || "",
+      icon: data.owner?.avatar_url || "",
+    };
+  } catch (error) {
+    console.warn("Failed to fetch GitHub repository info:", error.message);
+    return null;
+  }
+}
+
+/**
+ * Get project information automatically without user confirmation
+ * @returns {Promise<Object>} - Project information including name, description, icon, and fromGitHub flag
+ */
+export async function getProjectInfo() {
+  let repoInfo = null;
+  let defaultName = path.basename(process.cwd());
+  let defaultDescription = "";
+  let defaultIcon = "";
+  let fromGitHub = false;
+
+  // Check if we're in a git repository
+  try {
+    const gitRemote = execSync("git remote get-url origin", {
+      encoding: "utf8",
+      stdio: ["pipe", "pipe", "ignore"],
+    }).trim();
+
+    // Extract repository name from git remote URL
+    const repoName = gitRemote.split("/").pop().replace(".git", "");
+    defaultName = repoName;
+
+    // If it's a GitHub repository, try to get additional info
+    if (gitRemote.includes("github.com")) {
+      repoInfo = await getGitHubRepoInfo(gitRemote);
+      if (repoInfo) {
+        defaultDescription = repoInfo.description;
+        defaultIcon = repoInfo.icon;
+        fromGitHub = true;
+      }
+    }
+  } catch (error) {
+    // Not in git repository or no origin remote, use current directory name
+    console.warn("No git repository found, using current directory name");
+  }
+
+  return {
+    name: defaultName,
+    description: defaultDescription,
+    icon: defaultIcon,
+    fromGitHub,
+  };
 }
