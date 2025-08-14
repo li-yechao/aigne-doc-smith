@@ -1,25 +1,89 @@
 // Default file patterns for inclusion and exclusion
 export const DEFAULT_INCLUDE_PATTERNS = [
+  // Python
   "*.py",
+  "*.pyi",
+  "*.pyx",
+  // JavaScript/TypeScript
   "*.js",
   "*.jsx",
   "*.ts",
   "*.tsx",
-  "*.go",
-  "*.java",
-  "*.pyi",
-  "*.pyx",
+  // C/C++
   "*.c",
   "*.cc",
   "*.cpp",
+  "*.cxx",
+  "*.c++",
   "*.h",
+  "*.hpp",
+  "*.hxx",
+  "*.h++",
+  // JVM Languages
+  "*.java",
+  "*.kt",
+  "*.scala",
+  "*.groovy",
+  "*.gvy",
+  "*.gy",
+  "*.gsh",
+  "*.clj",
+  "*.cljs",
+  "*.cljx",
+  // .NET Languages
+  "*.cs",
+  "*.vb",
+  "*.fs",
+  // Functional Languages
+  "*.f",
+  "*.ml",
+  "*.sml",
+  "*.lisp",
+  "*.lsp",
+  "*.cl",
+  // Systems Programming
+  "*.rs",
+  "*.go",
+  "*.nim",
+  "*.asm",
+  "*.s",
+  // Web Technologies
+  "*.html",
+  "*.htm",
+  "*.css",
+  "*.php",
+  // Scripting Languages
+  "*.rb",
+  "*.pl",
+  "*.ps1",
+  "*.lua",
+  "*.tcl",
+  // Mobile/Modern Languages
+  "*.swift",
+  "*.dart",
+  "*.ex",
+  "*.exs",
+  "*.erl",
+  "*.jl",
+  // Data Science
+  "*.r",
+  "*.R",
+  "*.m",
+  // Other Languages
+  "*.pas",
+  "*.cob",
+  "*.cbl",
+  "*.pro",
+  "*.prolog",
+  "*.sql",
+  // Documentation & Config
   "*.md",
   "*.rst",
   "*.json",
-  "*Dockerfile",
-  "*Makefile",
   "*.yaml",
   "*.yml",
+  "*Dockerfile",
+  "*Makefile",
 ];
 
 export const DEFAULT_EXCLUDE_PATTERNS = [
@@ -78,13 +142,13 @@ export const SUPPORTED_LANGUAGES = [
 
 // Predefined document generation styles
 export const DOCUMENT_STYLES = {
-  developerDocs: {
-    name: "Developer Docs",
-    rules: "Steps-first; copy-paste examples; minimal context; active 'you'.",
-  },
   userGuide: {
     name: "User Guide",
     rules: "Scenario-based; step-by-step; plain language; outcomes & cautions.",
+  },
+  developerDocs: {
+    name: "Developer Docs",
+    rules: "Steps-first; copy-paste examples; minimal context; active 'you'.",
   },
   apiReference: {
     name: "API Reference",
@@ -98,8 +162,11 @@ export const DOCUMENT_STYLES = {
 
 // Predefined target audiences
 export const TARGET_AUDIENCES = {
+  generalUsers: "General Users",
   actionFirst: "Developers, Implementation Engineers, DevOps",
   conceptFirst: "Architects, Technical Leads, Developers interested in principles",
-  generalUsers: "General Users",
   custom: "Enter your own target audience",
 };
+
+// Component mount point ID for Discuss Kit
+export const DISCUSS_KIT_DID = "z8ia1WEiBZ7hxURf6LwH21Wpg99vophFwSJdu";
