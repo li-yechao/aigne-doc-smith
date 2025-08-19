@@ -10,6 +10,7 @@ skills:
   - ./load-config.mjs
   - ./load-sources.mjs
   - type: transform
+    task_render_mode: hide
     jsonata: |
       $merge([
         $,
@@ -33,14 +34,10 @@ skills:
 input_schema:
   type: object
   properties:
-    # config:
-    #   type: string
-    #   description: Path to the config file
-    #   default: ./.aigne/doc-smith/config.yaml
     glossary:
       type: string
-      description: Glossary of terms for consistent terminology
-    doc-path:
+      description: Glossary of terms for consistent terminology, use @<file> to read from a file
+    docPath:
       type: string
       description: Document path to regenerate
     feedback:

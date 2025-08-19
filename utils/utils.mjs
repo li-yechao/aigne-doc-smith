@@ -2,9 +2,16 @@ import { execSync } from "node:child_process";
 import { accessSync, constants, existsSync, mkdirSync, readdirSync, statSync } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import chalk from "chalk";
 import { parse } from "yaml";
-import { DEFAULT_EXCLUDE_PATTERNS, DEFAULT_INCLUDE_PATTERNS } from "./constants.mjs";
+import {
+  DEFAULT_EXCLUDE_PATTERNS,
+  DEFAULT_INCLUDE_PATTERNS,
+  DOCUMENT_STYLES,
+  TARGET_AUDIENCES,
+  READER_KNOWLEDGE_LEVELS,
+  DOCUMENTATION_DEPTH,
+  SUPPORTED_LANGUAGES,
+} from "./constants.mjs";
 
 /**
  * Normalize path to absolute path for consistent comparison
@@ -94,7 +101,6 @@ export async function saveDocWithTranslations({
 
       await fs.writeFile(mainFilePath, finalContent, "utf8");
       results.push({ path: mainFilePath, success: true });
-      console.log(chalk.green(`Saved: ${chalk.cyan(mainFilePath)}`));
     }
 
     // Process all translations
@@ -113,7 +119,6 @@ export async function saveDocWithTranslations({
 
       await fs.writeFile(translatePath, finalTranslationContent, "utf8");
       results.push({ path: translatePath, success: true });
-      console.log(chalk.green(`Saved: ${chalk.cyan(translatePath)}`));
     }
   } catch (err) {
     results.push({ path: docPath, success: false, error: err.message });
@@ -702,4 +707,145 @@ export async function getProjectInfo() {
     icon: defaultIcon,
     fromGitHub,
   };
+}
+
+/**
+ * Process configuration fields - convert keys to actual content
+ * @param {Object} config - Parsed configuration
+ * @returns {Object} Processed configuration with content fields
+ */
+export function processConfigFields(config) {
+  const processed = {};
+  const allRulesContent = [];
+
+  // Check if original rules field has content
+  const existingRules = config.rules?.trim();
+  if (existingRules) {
+    allRulesContent.push(existingRules);
+  }
+
+  // Process document purpose (array)
+  let purposeContents = "";
+  if (config.documentPurpose && Array.isArray(config.documentPurpose)) {
+    purposeContents = config.documentPurpose
+      .map((key) => DOCUMENT_STYLES[key]?.content)
+      .filter(Boolean)
+      .join("\n\n");
+
+    if (purposeContents) {
+      allRulesContent.push(purposeContents);
+    }
+  }
+
+  // Process target audience types (array)
+  let audienceContents = "";
+  let audienceNames = "";
+  if (config.targetAudienceTypes && Array.isArray(config.targetAudienceTypes)) {
+    // Get content for rules
+    audienceContents = config.targetAudienceTypes
+      .map((key) => TARGET_AUDIENCES[key]?.content)
+      .filter(Boolean)
+      .join("\n\n");
+
+    // Get names for targetAudience field
+    audienceNames = config.targetAudienceTypes
+      .map((key) => TARGET_AUDIENCES[key]?.name)
+      .filter(Boolean)
+      .join(", ");
+
+    if (audienceContents) {
+      allRulesContent.push(audienceContents);
+    }
+
+    if (audienceNames) {
+      // Check if original targetAudience field has content
+      const existingTargetAudience = config.targetAudience?.trim();
+      const newAudienceNames = audienceNames;
+
+      if (existingTargetAudience) {
+        processed.targetAudience = `${existingTargetAudience}\n\n${newAudienceNames}`;
+      } else {
+        processed.targetAudience = newAudienceNames;
+      }
+    }
+  }
+
+  // Process reader knowledge level (single value)
+  let knowledgeContent = "";
+  if (config.readerKnowledgeLevel) {
+    knowledgeContent = READER_KNOWLEDGE_LEVELS[config.readerKnowledgeLevel]?.content;
+    if (knowledgeContent) {
+      processed.readerKnowledgeContent = knowledgeContent;
+      allRulesContent.push(`Reader Knowledge Level:\n${knowledgeContent}`);
+    }
+  }
+
+  // Process documentation depth (single value)
+  let depthContent = "";
+  if (config.documentationDepth) {
+    depthContent = DOCUMENTATION_DEPTH[config.documentationDepth]?.content;
+    if (depthContent) {
+      processed.documentationDepthContent = depthContent;
+      allRulesContent.push(`Documentation Depth:\n${depthContent}`);
+    }
+  }
+
+  // Combine all content into rules field
+  if (allRulesContent.length > 0) {
+    processed.rules = allRulesContent.join("\n\n");
+  }
+
+  return processed;
+}
+
+/**
+ * Detect system language and map to supported language code
+ * @returns {string} - Supported language code (defaults to 'en' if detection fails or unsupported)
+ */
+export function detectSystemLanguage() {
+  try {
+    // Try multiple methods to detect system language
+    let systemLocale = null;
+
+    // Method 1: Environment variables (most reliable on Unix systems)
+    systemLocale = process.env.LANG || process.env.LANGUAGE || process.env.LC_ALL;
+
+    // Method 2: Node.js Intl API (fallback)
+    if (!systemLocale) {
+      try {
+        systemLocale = Intl.DateTimeFormat().resolvedOptions().locale;
+      } catch (_error) {
+        // Intl API failed, continue to fallback
+      }
+    }
+
+    if (!systemLocale) {
+      return "en"; // Default fallback
+    }
+
+    // Extract language code from locale (e.g., 'zh_CN' -> 'zh', 'en_US' -> 'en')
+    const langCode = systemLocale.split(/[-_]/)[0].toLowerCase();
+
+    // Map to supported language codes
+    const supportedLang = SUPPORTED_LANGUAGES.find((lang) => lang.code === langCode);
+    if (supportedLang) {
+      return supportedLang.code;
+    }
+
+    // Handle special cases for Chinese variants
+    if (langCode === "zh") {
+      // Check for Traditional Chinese indicators
+      const fullLocale = systemLocale.toLowerCase();
+      if (fullLocale.includes("tw") || fullLocale.includes("hk") || fullLocale.includes("mo")) {
+        return "zh-TW";
+      }
+      return "zh"; // Default to Simplified Chinese
+    }
+
+    // Return default if no match found
+    return "en";
+  } catch (_error) {
+    // Any error in detection, return default
+    return "en";
+  }
 }
