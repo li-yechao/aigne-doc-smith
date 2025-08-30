@@ -103,6 +103,8 @@ parentId: {{parentId}}
 
 {% include "document/detail-generator.md" %}
 
+{% include "document/custom-components.md" %}
+
 </rules>
 
 {% include "document/detail-example.md" %}

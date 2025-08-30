@@ -1,12 +1,12 @@
-import fs from "fs-extra";
 import { basename, join } from "node:path";
 import { publishDocs as publishDocsFn } from "@aigne/publish-docs";
 import chalk from "chalk";
+import fs from "fs-extra";
 
 import { getAccessToken } from "../utils/auth-utils.mjs";
 import { DISCUSS_KIT_STORE_URL, TMP_DIR, TMP_DOCS_DIR } from "../utils/constants.mjs";
-import { getGithubRepoUrl, loadConfigFromFile, saveValueToConfig } from "../utils/utils.mjs";
 import { beforePublishHook, ensureTmpDir } from "../utils/kroki-utils.mjs";
+import { getGithubRepoUrl, loadConfigFromFile, saveValueToConfig } from "../utils/utils.mjs";
 
 const DEFAULT_APP_URL = "https://docsmith.aigne.io";
 
@@ -117,7 +117,7 @@ export default async function publishDocs(
       boardName: projectInfo.name,
       boardDesc: projectInfo.description,
       boardCover: projectInfo.icon,
-      mediaFolder: docsDir,
+      mediaFolder: rawDocsDir,
       cacheFilePath: join(".aigne", "doc-smith", "upload-cache.yaml"),
       boardMeta,
     });

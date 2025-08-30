@@ -1,9 +1,9 @@
 import { execSync } from "node:child_process";
+import crypto from "node:crypto";
 import { accessSync, constants, existsSync, mkdirSync, readdirSync, statSync } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import crypto from "node:crypto";
-import { parse } from "yaml";
+import { parse, stringify as yamlStringify } from "yaml";
 import {
   detectResolvableConflicts,
   generateConflictResolutionRules,
@@ -35,6 +35,16 @@ export function normalizePath(filePath) {
  */
 export function toRelativePath(filePath) {
   return path.isAbsolute(filePath) ? path.relative(process.cwd(), filePath) : filePath;
+}
+
+/**
+ * Check if a string looks like a glob pattern
+ * @param {string} pattern - The string to check
+ * @returns {boolean} - True if the string contains glob pattern characters
+ */
+export function isGlobPattern(pattern) {
+  if (pattern == null) return false;
+  return /[*?[\]]|(\*\*)/.test(pattern);
 }
 
 export function processContent({ content }) {
@@ -176,7 +186,9 @@ export async function saveGitHeadToConfig(gitHead) {
 
     // Check if lastGitHead already exists in the file
     const lastGitHeadRegex = /^lastGitHead:\s*.*$/m;
-    const newLastGitHeadLine = `lastGitHead: ${gitHead}`;
+    // Use yaml library to safely serialize the git head value
+    const yamlContent = yamlStringify({ lastGitHead: gitHead }).trim();
+    const newLastGitHeadLine = yamlContent;
 
     if (lastGitHeadRegex.test(fileContent)) {
       // Replace existing lastGitHead line
@@ -294,8 +306,10 @@ export function hasFileChangesBetweenCommits(
     return addedOrDeletedFiles.some((filePath) => {
       // Check if file matches any include pattern
       const matchesInclude = includePatterns.some((pattern) => {
-        // Convert glob pattern to regex for matching
-        const regexPattern = pattern.replace(/\./g, "\\.").replace(/\*/g, ".*").replace(/\?/g, ".");
+        // First escape all regex special characters except * and ?
+        const escapedPattern = pattern.replace(/[.+^${}()|[\]\\]/g, "\\$&");
+        // Then convert glob wildcards to regex
+        const regexPattern = escapedPattern.replace(/\*/g, ".*").replace(/\?/g, ".");
         const regex = new RegExp(regexPattern);
         return regex.test(filePath);
       });
@@ -306,8 +320,10 @@ export function hasFileChangesBetweenCommits(
 
       // Check if file matches any exclude pattern
       const matchesExclude = excludePatterns.some((pattern) => {
-        // Convert glob pattern to regex for matching
-        const regexPattern = pattern.replace(/\./g, "\\.").replace(/\*/g, ".*").replace(/\?/g, ".");
+        // First escape all regex special characters except * and ?
+        const escapedPattern = pattern.replace(/[.+^${}()|[\]\\]/g, "\\$&");
+        // Then convert glob wildcards to regex
+        const regexPattern = escapedPattern.replace(/\*/g, ".*").replace(/\?/g, ".");
         const regex = new RegExp(regexPattern);
         return regex.test(filePath);
       });
@@ -358,9 +374,10 @@ export async function loadConfigFromFile() {
  * @returns {string} Updated file content
  */
 function handleArrayValueUpdate(key, value, comment, fileContent) {
-  // Format array value
-  const formattedValue =
-    value.length === 0 ? `${key}: []` : `${key}:\n${value.map((item) => `  - ${item}`).join("\n")}`;
+  // Use yaml library to safely serialize the key-value pair
+  const yamlObject = { [key]: value };
+  const yamlContent = yamlStringify(yamlObject).trim();
+  const formattedValue = yamlContent;
 
   const lines = fileContent.split("\n");
 
@@ -442,7 +459,10 @@ function handleArrayValueUpdate(key, value, comment, fileContent) {
  * @returns {string} Updated file content
  */
 function handleStringValueUpdate(key, value, comment, fileContent) {
-  const formattedValue = `${key}: "${value}"`;
+  // Use yaml library to safely serialize the key-value pair
+  const yamlObject = { [key]: value };
+  const yamlContent = yamlStringify(yamlObject).trim();
+  const formattedValue = yamlContent;
   const lines = fileContent.split("\n");
 
   // Handle string values (original logic)
@@ -855,6 +875,29 @@ export async function getProjectInfo() {
 export function processConfigFields(config) {
   const processed = {};
   const allRulesContent = [];
+
+  // Set default values for missing or empty fields
+  const defaults = {
+    nodeName: "Section",
+    locale: "en",
+    sourcesPath: ["./"],
+    docsDir: "./.aigne/doc-smith/docs",
+    outputDir: "./.aigne/doc-smith/output",
+    translateLanguages: [],
+    rules: "",
+    targetAudience: "",
+  };
+
+  // Apply defaults for missing or empty fields
+  for (const [key, defaultValue] of Object.entries(defaults)) {
+    if (
+      !config[key] ||
+      (Array.isArray(defaultValue) && (!config[key] || config[key].length === 0)) ||
+      (typeof defaultValue === "string" && (!config[key] || config[key].trim() === ""))
+    ) {
+      processed[key] = defaultValue;
+    }
+  }
 
   // Check if original rules field has content
   if (config.rules) {

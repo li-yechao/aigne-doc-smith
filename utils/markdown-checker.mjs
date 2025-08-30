@@ -1,15 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
+import pMap from "p-map";
 import remarkGfm from "remark-gfm";
 import remarkLint from "remark-lint";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
 import { visit } from "unist-util-visit";
 import { VFile } from "vfile";
-import { validateMermaidSyntax } from "./mermaid-validator.mjs";
-import { checkD2Content } from "./kroki-utils.mjs";
-import pMap from "p-map";
 import { KROKI_CONCURRENCY } from "./constants.mjs";
+import { checkD2Content } from "./kroki-utils.mjs";
+import { validateMermaidSyntax } from "./mermaid-validator.mjs";
 
 /**
  * Parse table row and count actual columns
@@ -70,7 +70,10 @@ function checkDeadLinks(markdown, source, allowedLinks, errorMessages) {
   const linkRegex = /(?<!!)\[([^\]]+)\]\(([^)]+)\)/g;
   let match;
 
-  while ((match = linkRegex.exec(markdown)) !== null) {
+  while (true) {
+    match = linkRegex.exec(markdown);
+    if (match === null) break;
+
     const link = match[2];
     const trimLink = link.trim();
 
@@ -176,7 +179,9 @@ function checkLocalImages(markdown, source, errorMessages, markdownFilePath, bas
   const imageRegex = /!\[([^\]]*)\]\(([^)]+)\)/g;
   let match;
 
-  while ((match = imageRegex.exec(markdown)) !== null) {
+  while (true) {
+    match = imageRegex.exec(markdown);
+    if (match === null) break;
     const imagePath = match[2].trim();
     const altText = match[1];
 

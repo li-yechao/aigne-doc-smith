@@ -1,9 +1,9 @@
 import path from "node:path";
 
 import fs from "fs-extra";
-import { joinURL } from "ufo";
 import { glob } from "glob";
 import pMap from "p-map";
+import { joinURL } from "ufo";
 
 import {
   D2_CONFIG,
