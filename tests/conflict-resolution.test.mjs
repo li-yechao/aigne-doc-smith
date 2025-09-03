@@ -2,10 +2,128 @@ import { describe, expect, test } from "bun:test";
 import {
   detectResolvableConflicts,
   generateConflictResolutionRules,
+  getFilteredOptions,
 } from "../utils/conflict-detector.mjs";
 import { processConfigFields } from "../utils/utils.mjs";
 
 describe("conflict resolution", () => {
+  describe("getFilteredOptions", () => {
+    test("should filter experiencedUsers when documentPurpose is getStarted", () => {
+      const allOptions = {
+        completeBeginners: "Complete beginners",
+        domainFamiliar: "Domain familiar",
+        experiencedUsers: "Experienced users",
+        emergencyTroubleshooting: "Emergency troubleshooting",
+      };
+
+      const currentSelections = {
+        documentPurpose: ["getStarted"],
+      };
+
+      const result = getFilteredOptions("readerKnowledgeLevel", currentSelections, allOptions);
+
+      expect(result.filteredOptions).not.toHaveProperty("experiencedUsers");
+      expect(result.appliedFilters).toHaveLength(1);
+      expect(result.appliedFilters[0].removedOption).toBe("experiencedUsers");
+    });
+
+    test("should filter completeBeginners when documentPurpose is findAnswers", () => {
+      const allOptions = {
+        completeBeginners: "Complete beginners",
+        domainFamiliar: "Domain familiar",
+        experiencedUsers: "Experienced users",
+      };
+
+      const currentSelections = {
+        documentPurpose: ["findAnswers"],
+      };
+
+      const result = getFilteredOptions("readerKnowledgeLevel", currentSelections, allOptions);
+
+      expect(result.filteredOptions).not.toHaveProperty("completeBeginners");
+      expect(result.appliedFilters).toHaveLength(1);
+      expect(result.appliedFilters[0].removedOption).toBe("completeBeginners");
+    });
+
+    test("should filter emergencyTroubleshooting when documentPurpose is understandSystem", () => {
+      const allOptions = {
+        completeBeginners: "Complete beginners",
+        emergencyTroubleshooting: "Emergency troubleshooting",
+      };
+
+      const currentSelections = {
+        documentPurpose: ["understandSystem"],
+      };
+
+      const result = getFilteredOptions("readerKnowledgeLevel", currentSelections, allOptions);
+
+      expect(result.filteredOptions).not.toHaveProperty("emergencyTroubleshooting");
+      expect(result.appliedFilters).toHaveLength(1);
+    });
+
+    test("should filter experiencedUsers when targetAudienceTypes includes endUsers", () => {
+      const allOptions = {
+        completeBeginners: "Complete beginners",
+        experiencedUsers: "Experienced users",
+      };
+
+      const currentSelections = {
+        targetAudienceTypes: ["endUsers"],
+      };
+
+      const result = getFilteredOptions("readerKnowledgeLevel", currentSelections, allOptions);
+
+      expect(result.filteredOptions).not.toHaveProperty("experiencedUsers");
+      expect(result.appliedFilters).toHaveLength(1);
+    });
+
+    test("should return original options when no conflicts", () => {
+      const allOptions = {
+        option1: "Option 1",
+        option2: "Option 2",
+      };
+
+      const currentSelections = {};
+
+      const result = getFilteredOptions("unknownType", currentSelections, allOptions);
+
+      expect(result.filteredOptions).toEqual(allOptions);
+      expect(result.appliedFilters).toHaveLength(0);
+    });
+
+    test("should handle object selections with value property", () => {
+      const allOptions = {
+        experiencedUsers: "Experienced users",
+        domainFamiliar: "Domain familiar",
+      };
+
+      const currentSelections = {
+        documentPurpose: [{ value: "getStarted", label: "Get Started" }],
+      };
+
+      const result = getFilteredOptions("readerKnowledgeLevel", currentSelections, allOptions);
+
+      expect(result.filteredOptions).not.toHaveProperty("experiencedUsers");
+      expect(result.appliedFilters).toHaveLength(1);
+    });
+
+    test("should handle multiple conditions in cross-conflict rules", () => {
+      const allOptions = {
+        emergencyTroubleshooting: "Emergency troubleshooting",
+        domainFamiliar: "Domain familiar",
+      };
+
+      const currentSelections = {
+        targetAudienceTypes: ["decisionMakers"],
+      };
+
+      const result = getFilteredOptions("readerKnowledgeLevel", currentSelections, allOptions);
+
+      expect(result.filteredOptions).not.toHaveProperty("emergencyTroubleshooting");
+      expect(result.appliedFilters).toHaveLength(1);
+    });
+  });
+
   describe("detectResolvableConflicts", () => {
     test("should detect document purpose conflicts", () => {
       const config = {

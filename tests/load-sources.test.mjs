@@ -923,12 +923,12 @@ describe("loadSources", () => {
         try {
           await unlink(link1);
         } catch {
-          // Ignore cleanup errors
+          // Ignore cleanup errors since they don't affect test results
         }
         try {
           await unlink(link2);
         } catch {
-          // Ignore cleanup errors
+          // Ignore cleanup errors since they don't affect test results
         }
       } catch {
         // Skip on systems that don't support symlinks
@@ -957,6 +957,366 @@ describe("loadSources", () => {
         expect(result.datasourcesList).toBeDefined();
         expect(Array.isArray(result.datasourcesList)).toBe(true);
         // Should not crash with any typical config
+      }
+    });
+  });
+
+  describe("File type handling and media assets", () => {
+    test("should handle individual files as sourcesPath", async () => {
+      // Test line 41: stats.isFile() branch
+      const singleFile = path.join(testDir, "single-file.js");
+      await writeFile(singleFile, "console.log('single file');");
+
+      const result = await loadSources({
+        sourcesPath: singleFile,
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: path.join(testDir, "docs"),
+      });
+
+      expect(result.datasourcesList).toBeDefined();
+      expect(result.datasourcesList.length).toBe(1);
+      expect(result.datasourcesList[0].sourceId).toContain("single-file.js");
+    });
+
+    test("should process media files correctly", async () => {
+      // Create media files to test lines 151-159
+      const mediaDir = path.join(testDir, "media");
+      await mkdir(mediaDir, { recursive: true });
+
+      await writeFile(path.join(mediaDir, "image.jpg"), "fake image data");
+      await writeFile(path.join(mediaDir, "video.mp4"), "fake video data");
+      await writeFile(path.join(mediaDir, "logo.svg"), "<svg></svg>");
+      await writeFile(path.join(mediaDir, "animation.webp"), "fake webp data");
+
+      const result = await loadSources({
+        sourcesPath: mediaDir,
+        includePatterns: ["**/*"],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: path.join(testDir, "docs"),
+      });
+
+      expect(result.assetsContent).toBeDefined();
+      expect(result.assetsContent).toContain("Available Media Assets");
+      expect(result.assetsContent).toContain("image.jpg");
+      expect(result.assetsContent).toContain("video.mp4");
+      expect(result.assetsContent).toContain("logo.svg");
+      expect(result.assetsContent).toContain('type: "image"');
+      expect(result.assetsContent).toContain('type: "video"');
+
+      // Test media file processing logic (lines 243-266)
+      expect(result.assetsContent).toContain("```yaml");
+      expect(result.assetsContent).toContain("assets:");
+    });
+
+    test("should handle glob pattern errors gracefully", async () => {
+      const invalidGlobPattern = "./invalid/**/*.{unclosed";
+
+      const result = await loadSources({
+        sourcesPath: [invalidGlobPattern],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: path.join(testDir, "docs"),
+      });
+
+      expect(result.datasourcesList).toBeDefined();
+      expect(Array.isArray(result.datasourcesList)).toBe(true);
+      // Should handle gracefully without crashing
+    });
+  });
+
+  describe("Document path and structure plan handling", () => {
+    test("should load existing structure plan", async () => {
+      const structurePlan = {
+        sections: ["Introduction", "API", "Examples"],
+        lastUpdated: new Date().toISOString(),
+      };
+
+      await writeFile(path.join(tempDir, "structure-plan.json"), JSON.stringify(structurePlan));
+
+      const result = await loadSources({
+        sourcesPath: testDir,
+        includePatterns: ["*.js"],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: path.join(testDir, "docs"),
+      });
+
+      expect(result.originalStructurePlan).toEqual(structurePlan);
+    });
+
+    test("should handle malformed structure plan JSON", async () => {
+      await writeFile(path.join(tempDir, "structure-plan.json"), "{ invalid json content");
+
+      const result = await loadSources({
+        sourcesPath: testDir,
+        includePatterns: ["*.js"],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: path.join(testDir, "docs"),
+      });
+
+      expect(result.originalStructurePlan).toBeUndefined();
+    });
+
+    test("should load document content by docPath", async () => {
+      const docsDir = path.join(testDir, "docs");
+      const docContent = "# API Documentation\n\nThis is the API documentation content.";
+
+      await writeFile(path.join(docsDir, "api-overview.md"), docContent);
+
+      const result = await loadSources({
+        sourcesPath: testDir,
+        "doc-path": "/api/overview",
+        includePatterns: ["*.md"],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: docsDir,
+      });
+
+      expect(result.content).toBe(docContent);
+    });
+
+    test("should handle boardId-based doc path format", async () => {
+      const docsDir = path.join(testDir, "docs");
+      const docContent = "# Board specific documentation";
+
+      await writeFile(path.join(docsDir, "user-guide.md"), docContent);
+
+      const result = await loadSources({
+        sourcesPath: testDir,
+        "doc-path": "board123-user-guide",
+        boardId: "board123",
+        includePatterns: ["*.md"],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: docsDir,
+      });
+
+      expect(result.content).toBe(docContent);
+    });
+
+    test("should handle non-existent doc path gracefully", async () => {
+      const result = await loadSources({
+        sourcesPath: testDir,
+        "doc-path": "/non-existent/doc",
+        includePatterns: ["*.md"],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: path.join(testDir, "docs"),
+      });
+
+      expect(result.content).toBeUndefined();
+    });
+
+    test("should handle includePatterns empty gracefully", async () => {
+      const docsDir = path.join(testDir, "docs");
+      const docContent = "# API Documentation\n\nThis is the API documentation content.";
+
+      await writeFile(path.join(docsDir, "api-overview.md"), docContent);
+
+      const result = await loadSources({
+        sourcesPath: testDir,
+        "doc-path": "/api/overview",
+        includePatterns: null,
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: docsDir,
+      });
+
+      expect(result.files?.length).toBe(0);
+    });
+  });
+
+  describe("Word and line counting", () => {
+    test("should count words and lines in source content", async () => {
+      // Create files with known content for counting
+      await writeFile(
+        path.join(testDir, "count-test.js"),
+        "// This file has words and lines\nconst message = 'hello world';\nconsole.log(message);\n\n// Another comment\nfunction test() {\n  return true;\n}",
+      );
+
+      const result = await loadSources({
+        sourcesPath: testDir,
+        includePatterns: ["count-test.js"],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: path.join(testDir, "docs"),
+      });
+
+      expect(result.totalWords).toBeGreaterThan(0);
+      expect(result.totalLines).toBeGreaterThan(0);
+      expect(typeof result.totalWords).toBe("number");
+      expect(typeof result.totalLines).toBe("number");
+    });
+  });
+
+  describe("Media file path and metadata processing", () => {
+    test("should correctly process media file relativePath, fileName, and description", async () => {
+      // Create media files in a specific structure to test the exact logic
+      const mediaSubDir = path.join(testDir, "assets", "images");
+      await mkdir(mediaSubDir, { recursive: true });
+
+      const imageFile = path.join(mediaSubDir, "company-logo.png");
+      const videoFile = path.join(mediaSubDir, "demo-video.mp4");
+      const svgFile = path.join(mediaSubDir, "icon-arrow.svg");
+
+      await writeFile(imageFile, "fake png data");
+      await writeFile(videoFile, "fake video data");
+      await writeFile(svgFile, "<svg>fake svg</svg>");
+
+      const docsDir = path.join(testDir, "docs");
+
+      const result = await loadSources({
+        sourcesPath: mediaSubDir,
+        includePatterns: ["**/*"],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: docsDir,
+      });
+
+      expect(result.assetsContent).toBeDefined();
+
+      // Check that relativePath calculation worked (line 151)
+      expect(result.assetsContent).toContain("../assets/images/company-logo.png");
+      expect(result.assetsContent).toContain("../assets/images/demo-video.mp4");
+      expect(result.assetsContent).toContain("../assets/images/icon-arrow.svg");
+
+      // Check that fileName extraction worked (line 152)
+      expect(result.assetsContent).toContain('name: "company-logo.png"');
+      expect(result.assetsContent).toContain('name: "demo-video.mp4"');
+      expect(result.assetsContent).toContain('name: "icon-arrow.svg"');
+
+      // Test with complex filenames to ensure path.parse works correctly
+      const complexFile = path.join(mediaSubDir, "my-complex.file-name.with.dots.jpg");
+      await writeFile(complexFile, "fake jpg data");
+
+      const result2 = await loadSources({
+        sourcesPath: mediaSubDir,
+        includePatterns: ["my-complex.file-name.with.dots.jpg"],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: docsDir,
+      });
+
+      expect(result2.assetsContent).toContain('name: "my-complex.file-name.with.dots.jpg"');
+      expect(result2.assetsContent).toContain(
+        "../assets/images/my-complex.file-name.with.dots.jpg",
+      );
+    });
+
+    test("should handle media files with same docsDir path correctly", async () => {
+      // Test when media files are in the same directory as docsDir
+      const docsDir = path.join(testDir, "docs");
+      const mediaFile = path.join(docsDir, "logo.png");
+
+      await writeFile(mediaFile, "fake logo data");
+
+      const result = await loadSources({
+        sourcesPath: docsDir,
+        includePatterns: ["*.png"],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: docsDir,
+      });
+
+      // When file is in docsDir, relativePath should be just the filename
+      expect(result.assetsContent).toContain('path: "logo.png"');
+      expect(result.assetsContent).toContain('name: "logo.png"');
+    });
+
+    test("should handle media files in parent directory relative to docsDir", async () => {
+      // Test when media files are in parent directory of docsDir
+      const docsDir = path.join(testDir, "documentation");
+      await mkdir(docsDir, { recursive: true });
+
+      const mediaFile = path.join(testDir, "header-image.jpg");
+      await writeFile(mediaFile, "fake header data");
+
+      const result = await loadSources({
+        sourcesPath: testDir,
+        includePatterns: ["header-image.jpg"],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: docsDir,
+      });
+
+      // When file is in parent of docsDir, relativePath should use ../
+      expect(result.assetsContent).toContain('path: "../header-image.jpg"');
+      expect(result.assetsContent).toContain('name: "header-image.jpg"');
+    });
+  });
+
+  describe("Edge cases and error handling", () => {
+    test("should handle empty media files list", async () => {
+      const result = await loadSources({
+        sourcesPath: testDir,
+        includePatterns: ["*.js"], // Only include non-media files
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: path.join(testDir, "docs"),
+      });
+
+      expect(result.assetsContent).toBeDefined();
+      expect(result.assetsContent).toContain("Available Media Assets");
+      // Should have basic header even with no media files
+    });
+
+    test("should handle mixed source and media files", async () => {
+      // Create mixed content
+      await writeFile(path.join(testDir, "mixed-test.js"), "console.log('code');");
+      await writeFile(path.join(testDir, "mixed-image.png"), "fake png data");
+      await writeFile(path.join(testDir, "mixed-doc.md"), "# Documentation");
+
+      const result = await loadSources({
+        sourcesPath: testDir,
+        includePatterns: ["mixed-*"],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: path.join(testDir, "docs"),
+      });
+
+      expect(result.datasourcesList.length).toBeGreaterThan(0);
+      expect(result.assetsContent).toContain("mixed-image.png");
+
+      // Verify both source files and media files are processed
+      const sourceFiles = result.datasourcesList.map((f) => f.sourceId);
+      expect(sourceFiles.some((f) => f.includes("mixed-test.js"))).toBe(true);
+      expect(sourceFiles.some((f) => f.includes("mixed-doc.md"))).toBe(true);
+    });
+
+    test("should handle various media file types", async () => {
+      const mediaTypes = [
+        { name: "test.jpg", type: "image" },
+        { name: "test.jpeg", type: "image" },
+        { name: "test.png", type: "image" },
+        { name: "test.gif", type: "image" },
+        { name: "test.webp", type: "image" },
+        { name: "test.svg", type: "image" },
+        { name: "test.mp4", type: "video" },
+        { name: "test.mov", type: "video" },
+        { name: "test.avi", type: "video" },
+        { name: "test.webm", type: "video" },
+      ];
+
+      // Create all media file types
+      for (const media of mediaTypes) {
+        await writeFile(path.join(testDir, media.name), `fake ${media.type} data`);
+      }
+
+      const result = await loadSources({
+        sourcesPath: testDir,
+        includePatterns: ["test.*"],
+        useDefaultPatterns: false,
+        outputDir: tempDir,
+        docsDir: path.join(testDir, "docs"),
+      });
+
+      // Verify all media types are properly categorized
+      for (const media of mediaTypes) {
+        expect(result.assetsContent).toContain(media.name);
+        expect(result.assetsContent).toContain(`type: "${media.type}"`);
       }
     });
   });

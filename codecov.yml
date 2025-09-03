@@ -7,7 +7,7 @@ coverage:
         threshold: 0%
         base: auto 
 comment:
-  layout: " diff, flags, files"
+  layout: "header, changes, diff, flags, files"
   behavior: default
   require_changes: false
   require_base: false
