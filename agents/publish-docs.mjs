@@ -54,12 +54,12 @@ export default async function publishDocs(
       choices: [
         {
           name:
-            chalk.blue("Publish to docsmith.aigne.io") +
-            " - free, but your documents will be publicly accessible, recommended for open-source projects",
+            chalk.blue("DocSmith Cloud (docsmith.aigne.io)") +
+            " – Free hosting. Your documents will be publicly accessible. Best for open-source projects or community sharing.",
           value: "default",
         },
         {
-          name: `${chalk.blue("Publish to your existing website")} - use your current website`,
+          name: `${chalk.blue("Your existing website")} - Integrate and publish directly on your current site. (Some setup required.)`,
           value: "custom",
         },
         ...(hasCachedCheckoutId && hasDocSmithBaseUrl
@@ -75,7 +75,7 @@ export default async function publishDocs(
         ...(hasDocSmithBaseUrl
           ? [
               {
-                name: `${chalk.blue("Publish to a new website")} - we'll help you set up a new website`,
+                name: `${chalk.blue("New website (paid)")} - We’ll help you set up a brand-new website with custom domain and hosting. Great if you want a professional presence.`,
                 value: "new-instance",
               },
             ]
@@ -113,7 +113,7 @@ export default async function publishDocs(
           paymentUrl = config?.paymentUrl;
           console.log(`\nResuming your previous website setup...`);
         } else {
-          console.log(`\nCreating a new doc website for your documentation...`);
+          console.log(`\nCreating new website for your documentation...`);
         }
         const { appUrl: homeUrl, token: ltToken } = (await deploy(id, paymentUrl)) || {};
 
@@ -211,4 +211,4 @@ publishDocs.input_schema = {
   },
 };
 
-publishDocs.description = "Publish the documentation to Discuss Kit";
+publishDocs.description = "Publish the documentation to website";
