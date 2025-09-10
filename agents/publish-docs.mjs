@@ -127,6 +127,9 @@ export default async function publishDocs(
     }
   }
 
+  // Publishing docs to {appUrl}...
+  console.log(`\nPublishing docs to ${chalk.cyan(appUrl)}\n`);
+
   const accessToken = await getAccessToken(appUrl, token);
 
   process.env.DOC_ROOT_DIR = docsDir;
