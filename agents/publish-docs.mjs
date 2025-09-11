@@ -53,21 +53,17 @@ export default async function publishDocs(
       message: "Select platform to publish your documents:",
       choices: [
         {
-          name:
-            chalk.blue("DocSmith Cloud (docsmith.aigne.io)") +
-            " – Free hosting. Your documents will be publicly accessible. Best for open-source projects or community sharing.",
+          name: `${chalk.blue("DocSmith Cloud (docsmith.aigne.io)")} – ${chalk.green("Free")} hosting. Your documents will be publicly accessible. Best for open-source projects or community sharing.`,
           value: "default",
         },
         {
-          name: `${chalk.blue("Your existing website")} - Integrate and publish directly on your current site. (Some setup required.)`,
+          name: `${chalk.blue("Your existing website")} - Integrate and publish directly on your current site (setup required)`,
           value: "custom",
         },
         ...(hasCachedCheckoutId && hasDocSmithBaseUrl
           ? [
               {
-                name:
-                  chalk.yellow("Continue your previous website setup") +
-                  " - resume from where you left off",
+                name: `${chalk.yellow("Resume previous website setup")} - ${chalk.green("Already paid.")} Continue where you left off. Your payment is already processed.`,
                 value: "new-instance-continue",
               },
             ]
@@ -75,7 +71,7 @@ export default async function publishDocs(
         ...(hasDocSmithBaseUrl
           ? [
               {
-                name: `${chalk.blue("New website (paid)")} - We’ll help you set up a brand-new website with custom domain and hosting. Great if you want a professional presence.`,
+                name: `${chalk.blue("New website")} - ${chalk.yellow("Paid service.")} We'll help you set up a brand-new website with custom domain and hosting. Great if you want a professional presence.`,
                 value: "new-instance",
               },
             ]
@@ -127,7 +123,6 @@ export default async function publishDocs(
     }
   }
 
-  // Publishing docs to {appUrl}...
   console.log(`\nPublishing docs to ${chalk.cyan(appUrl)}\n`);
 
   const accessToken = await getAccessToken(appUrl, token);
@@ -188,7 +183,7 @@ export default async function publishDocs(
   } catch (error) {
     message = `❌ Failed to publish docs: ${error.message}`;
   }
-  saveValueToConfig("checkoutId", "", "Checkout ID for document deployment service");
+  await saveValueToConfig("checkoutId", "", "Checkout ID for document deployment service");
 
   // clean up tmp work dir
   await fs.rm(docsDir, { recursive: true, force: true });

@@ -11,8 +11,8 @@ mock.module("../utils/blocklet.mjs", () => ({
 }));
 
 // Import the real utils module and deploy function
-import * as utils from "../utils/utils.mjs";
 import { deploy } from "../utils/deploy.mjs";
+import * as utils from "../utils/utils.mjs";
 
 describe("deploy function", () => {
   let originalFetch;
@@ -44,7 +44,8 @@ describe("deploy function", () => {
     mockOpen = mock(() => Promise.resolve());
 
     // Mock the dynamic import of 'open' module by intercepting global import
-    const originalImport = global.import || (await import("module")).createRequire(import.meta.url);
+    const originalImport =
+      global.import || (await import("node:module")).createRequire(import.meta.url);
     global.import = async (module) => {
       if (module === "open") {
         return { default: mockOpen };
@@ -77,12 +78,12 @@ describe("deploy function", () => {
     global.fetch = originalFetch;
     console.log = originalConsole.log;
     console.error = originalConsole.error;
-    
+
     // Restore spies
     if (saveValueToConfigSpy) {
       saveValueToConfigSpy.mockRestore();
     }
-    
+
     // Reset mocks
     if (mockOpen) {
       mockOpen.mockReset();
@@ -94,7 +95,7 @@ describe("deploy function", () => {
     let callCount = 0;
     global.fetch = mock(async (url) => {
       callCount++;
-      
+
       // Step 1: Create payment session
       if (url.includes("/api/checkout-sessions/start")) {
         return {
@@ -106,7 +107,7 @@ describe("deploy function", () => {
           }),
         };
       }
-      
+
       // Step 2-4: Poll payment/installation/service status
       if (url.includes("/api/vendors/order/checkout-123/status")) {
         if (callCount <= 2) {
@@ -131,19 +132,21 @@ describe("deploy function", () => {
           };
         }
       }
-      
+
       // Step 5: Get order details
       if (url.includes("/api/vendors/order/checkout-123/detail")) {
         return {
           ok: true,
           status: 200,
           json: async () => ({
-            vendors: [{
-              appUrl: "https://app.test",
-              dashboardUrl: "https://dashboard.test",
-              homeUrl: "https://home.test",
-              token: "auth-token-123",
-            }],
+            vendors: [
+              {
+                appUrl: "https://app.test",
+                dashboardUrl: "https://dashboard.test",
+                homeUrl: "https://home.test",
+                token: "auth-token-123",
+              },
+            ],
           }),
         };
       }
@@ -156,29 +159,29 @@ describe("deploy function", () => {
     // Verify result
     expect(result).toEqual({
       appUrl: "https://app.test",
-      homeUrl: "https://home.test", 
+      homeUrl: "https://home.test",
       token: "auth-token-123",
     });
 
     // Verify saveValueToConfig was called
     expect(saveValueToConfigSpy).toHaveBeenCalledWith(
-      "checkoutId", 
-      "checkout-123", 
-      "Checkout ID for document deployment service"
+      "checkoutId",
+      "checkout-123",
+      "Checkout ID for document deployment service",
     );
     expect(saveValueToConfigSpy).toHaveBeenCalledWith(
-      "paymentUrl", 
-      expect.stringContaining("payment"), 
-      "Payment URL for document deployment service"
+      "paymentUrl",
+      expect.stringContaining("payment"),
+      "Payment URL for document deployment service",
     );
 
     // Verify console output shows progress
-    const logs = consoleOutput.filter(o => o.type === "log").map(o => o.args.join(" "));
-    expect(logs.some(log => log.includes("Step 1/4: Waiting for payment"))).toBe(true);
-    expect(logs.some(log => log.includes("Step 2/4: Installing service"))).toBe(true);
-    expect(logs.some(log => log.includes("Step 3/4: Starting service"))).toBe(true);
-    expect(logs.some(log => log.includes("Step 4/4: Getting service URL"))).toBe(true);
-    expect(logs.some(log => log.includes("Your website is available at"))).toBe(true);
+    const logs = consoleOutput.filter((o) => o.type === "log").map((o) => o.args.join(" "));
+    expect(logs.some((log) => log.includes("Step 1/4: Waiting for payment"))).toBe(true);
+    expect(logs.some((log) => log.includes("Step 2/4: Installing service"))).toBe(true);
+    expect(logs.some((log) => log.includes("Step 3/4: Starting service"))).toBe(true);
+    expect(logs.some((log) => log.includes("Step 4/4: Getting service URL"))).toBe(true);
+    expect(logs.some((log) => log.includes("Your website is available at"))).toBe(true);
   });
 
   test("handles missing payment link ID", async () => {
@@ -203,7 +206,7 @@ describe("deploy function", () => {
 
     await expect(deploy()).rejects.toThrow("Failed to create payment session");
 
-    const errors = consoleOutput.filter(o => o.type === "error");
+    const errors = consoleOutput.filter((o) => o.type === "error");
     expect(errors.length).toBeGreaterThan(0);
   });
 
@@ -228,7 +231,7 @@ describe("deploy function", () => {
           }),
         };
       }
-      
+
       if (url.includes("/status")) {
         return {
           ok: true,
@@ -239,17 +242,19 @@ describe("deploy function", () => {
           }),
         };
       }
-      
+
       if (url.includes("/detail")) {
         return {
           ok: true,
           status: 200,
           json: async () => ({
-            vendors: [{
-              appUrl: "https://app.test",
-              homeUrl: "https://home.test",
-              token: "auth-token-123",
-            }],
+            vendors: [
+              {
+                appUrl: "https://app.test",
+                homeUrl: "https://home.test",
+                token: "auth-token-123",
+              },
+            ],
           }),
         };
       }
@@ -280,17 +285,19 @@ describe("deploy function", () => {
           }),
         };
       }
-      
+
       if (url.includes("/detail")) {
         return {
           ok: true,
           status: 200,
           json: async () => ({
-            vendors: [{
-              appUrl: "https://app.test",
-              homeUrl: "https://home.test", 
-              token: "auth-token-123",
-            }],
+            vendors: [
+              {
+                appUrl: "https://app.test",
+                homeUrl: "https://home.test",
+                token: "auth-token-123",
+              },
+            ],
           }),
         };
       }
@@ -299,7 +306,7 @@ describe("deploy function", () => {
     const result = await deploy("existing-checkout-id", "https://cached-payment.url");
 
     expect(result.appUrl).toBe("https://app.test");
-    
+
     // Should not call open since using cached checkout
     expect(mockOpen).not.toHaveBeenCalled();
   });
