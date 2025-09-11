@@ -10,6 +10,12 @@ mock.module("../utils/blocklet.mjs", () => ({
   getComponentInfo: mockGetComponentInfo,
 }));
 
+// Mock the open module to prevent opening browser during tests
+const mockOpenDefault = mock(() => Promise.resolve());
+mock.module("open", () => ({
+  default: mockOpenDefault,
+}));
+
 // Import the real utils module and deploy function
 import { deploy } from "../utils/deploy.mjs";
 import * as utils from "../utils/utils.mjs";
@@ -19,11 +25,12 @@ describe("deploy function", () => {
   let originalConsole;
   let consoleOutput;
   let saveValueToConfigSpy;
-  let mockOpen;
+  let originalSetTimeout;
 
   beforeEach(async () => {
     // Reset environment
     process.env.DOC_SMITH_BASE_URL = "https://test.example.com";
+    process.env.NODE_ENV = "test";
 
     // Mock console to capture output
     consoleOutput = [];
@@ -34,29 +41,18 @@ describe("deploy function", () => {
     console.log = (...args) => consoleOutput.push({ type: "log", args });
     console.error = (...args) => consoleOutput.push({ type: "error", args });
 
+    // Mock setTimeout to make tests run instantly
+    originalSetTimeout = global.setTimeout;
+    global.setTimeout = (callback, _delay) => {
+      // Call immediately in tests
+      return originalSetTimeout(callback, 0);
+    };
+
     // Mock fetch
     originalFetch = global.fetch;
 
     // Use spyOn to mock saveValueToConfig without affecting other tests
     saveValueToConfigSpy = spyOn(utils, "saveValueToConfig").mockResolvedValue();
-
-    // Create mock for open module
-    mockOpen = mock(() => Promise.resolve());
-
-    // Mock the dynamic import of 'open' module by intercepting global import
-    const originalImport =
-      global.import || (await import("node:module")).createRequire(import.meta.url);
-    global.import = async (module) => {
-      if (module === "open") {
-        return { default: mockOpen };
-      }
-      // For other modules, use original import
-      if (typeof originalImport === "function") {
-        return originalImport(module);
-      }
-      // Fallback to dynamic import
-      return import(module);
-    };
 
     // Reset blocklet mocks
     mockGetComponentInfoWithMountPoint.mockReset();
@@ -76,6 +72,7 @@ describe("deploy function", () => {
   afterEach(() => {
     // Restore originals
     global.fetch = originalFetch;
+    global.setTimeout = originalSetTimeout;
     console.log = originalConsole.log;
     console.error = originalConsole.error;
 
@@ -84,10 +81,11 @@ describe("deploy function", () => {
       saveValueToConfigSpy.mockRestore();
     }
 
-    // Reset mocks
-    if (mockOpen) {
-      mockOpen.mockReset();
-    }
+    // Reset open mock
+    mockOpenDefault.mockReset();
+
+    // Reset environment
+    delete process.env.NODE_ENV;
   });
 
   test("successful deployment flow", async () => {
@@ -261,7 +259,7 @@ describe("deploy function", () => {
     });
 
     // Mock open to fail
-    mockOpen.mockRejectedValue(new Error("Cannot open browser"));
+    mockOpenDefault.mockRejectedValue(new Error("Cannot open browser"));
 
     // Call deploy without cached parameters - should still succeed
     const result = await deploy();
@@ -308,6 +306,71 @@ describe("deploy function", () => {
     expect(result.appUrl).toBe("https://app.test");
 
     // Should not call open since using cached checkout
-    expect(mockOpen).not.toHaveBeenCalled();
+    expect(mockOpenDefault).not.toHaveBeenCalled();
+  });
+
+  test("clears checkout ID when cache check fails", async () => {
+    // Mock successful responses for the complete flow after cache check fails
+    let callCount = 0;
+    global.fetch = mock(async (url) => {
+      callCount++;
+
+      // First call: cache check fails
+      if (callCount === 1 && url.includes("/status")) {
+        throw new Error("Network error during cache check");
+      }
+
+      // Create payment session
+      if (url.includes("/api/checkout-sessions/start")) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({
+            checkoutSession: { id: "new-checkout-123" },
+            paymentUrl: "https://payment.test/new-checkout-123",
+          }),
+        };
+      }
+
+      // Subsequent status checks and detail calls
+      if (url.includes("/status")) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({
+            payment_status: "paid",
+            vendors: [{ id: "vendor-1", progress: 100, appUrl: "https://app.test" }],
+          }),
+        };
+      }
+
+      if (url.includes("/detail")) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({
+            vendors: [
+              {
+                appUrl: "https://app.test",
+                homeUrl: "https://home.test",
+                token: "auth-token-123",
+              },
+            ],
+          }),
+        };
+      }
+    });
+
+    // Call deploy with invalid cached checkout ID - should clear it and create new one
+    const result = await deploy("invalid-checkout-id");
+
+    expect(result.appUrl).toBe("https://app.test");
+
+    // Verify that checkoutId was cleared due to cache check failure
+    expect(saveValueToConfigSpy).toHaveBeenCalledWith(
+      "checkoutId",
+      "",
+      "Checkout ID for document deployment service",
+    );
   });
 });
