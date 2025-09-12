@@ -63,18 +63,25 @@
 
   **Parameters**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `name` | `string` | The name of the product. |
-  | `description` | `string` | An optional description for the product. |
-  | `type` | `string` | The type of product (e.g., `'service'`, `'good'`). |
-  | `prices` | `Partial<TPrice>[]` | An optional array of partial price objects to associate with the product upon creation. Each object can include `type`, `unit_amount`, `currency_id`, and `recurring` details. |
+  <x-field data-name="name" data-type="string" data-required="true" data-desc="The name of the product."></x-field>
+
+  <x-field data-name="description" data-type="string" data-required="false" data-desc="An optional description for the product."></x-field>
+
+  <x-field data-name="type" data-type="string" data-required="false" data-desc="The type of product (e.g., 'service', 'good')."></x-field>
+
+  <x-field data-name="prices" data-type="Partial<TPrice>[]" data-required="false" data-desc="An optional array of partial price objects to associate with the product upon creation">
+    <x-field data-name="type" data-type="string" data-required="true" data-desc="The type of price (e.g., 'recurring', 'one_time')"></x-field>
+    <x-field data-name="unit_amount" data-type="string" data-required="true" data-desc="The price amount as a string"></x-field>
+    <x-field data-name="currency_id" data-type="string" data-required="true" data-desc="The currency identifier"></x-field>
+    <x-field data-name="recurring" data-type="object" data-required="false" data-desc="Recurring price configuration">
+      <x-field data-name="interval" data-type="string" data-required="true" data-desc="The billing interval (e.g., 'month', 'year')"></x-field>
+      <x-field data-name="interval_count" data-type="number" data-required="true" data-desc="The number of intervals between each billing"></x-field>
+    </x-field>
+  </x-field>
 
   **Returns**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `product` | `TProductExpanded` | The newly created product object, including expanded details. |
+  <x-field data-name="product" data-type="TProductExpanded" data-desc="The newly created product object, including expanded details"></x-field>
 
   **Example**
 
@@ -124,15 +131,11 @@
 
   **Parameters**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `id` | `string` | The unique identifier of the product to retrieve. |
+  <x-field data-name="id" data-type="string" data-required="true" data-desc="The unique identifier of the product to retrieve."></x-field>
 
   **Returns**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `product` | `TProductExpanded` | The retrieved product object, including expanded details. |
+  <x-field data-name="product" data-type="TProductExpanded" data-desc="The retrieved product object, including expanded details."></x-field>
 
   **Example**
 
@@ -167,16 +170,13 @@
 
   **Parameters**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `id` | `string` | The unique identifier of the product to update. |
-  | `data` | `Partial<TProduct>` | An object containing the product fields to update. Available fields include `name`, `description`, `type`, etc. |
+  <x-field data-name="id" data-type="string" data-required="true" data-desc="The unique identifier of the product to update."></x-field>
+
+  <x-field data-name="data" data-type="Partial<TProduct>" data-required="true" data-desc="An object containing the product fields to update. Available fields include name, description, type, etc."></x-field>
 
   **Returns**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `product` | `TProductExpanded` | The updated product object. |
+  <x-field data-name="product" data-type="TProductExpanded" data-desc="The updated product object."></x-field>
 
   **Example**
 
@@ -213,25 +213,31 @@
 
   **Parameters**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `active` | `boolean` | Optional. Filter by product active status. |
-  | `name` | `string` | Optional. Filter by product name. |
-  | `description` | `string` | Optional. Filter by product description. |
-  | `metadata.{key}` | `string` | Optional. Filter by custom metadata fields. Use `metadata.yourKey` to specify a metadata property. |
-  | `page` | `number` | Optional. The page number for pagination (default: 1). |
-  | `pageSize` | `number` | Optional. The number of items per page (default: 50). |
-  | `order` | `string` | Optional. Sort order (e.g., `'created_at:ASC'`, `'updated_at:DESC'`). |
-  | `activeFirst` | `boolean` | Optional. If `true`, active products are listed first. |
+  <x-field data-name="active" data-type="boolean" data-required="false" data-desc="Optional. Filter by product active status."></x-field>
+
+  <x-field data-name="name" data-type="string" data-required="false" data-desc="Optional. Filter by product name."></x-field>
+
+  <x-field data-name="description" data-type="string" data-required="false" data-desc="Optional. Filter by product description."></x-field>
+
+  <x-field data-name="metadata.{key}" data-type="string" data-required="false" data-desc="Optional. Filter by custom metadata fields. Use metadata.yourKey to specify a metadata property."></x-field>
+
+  <x-field data-name="page" data-type="number" data-default="1" data-required="false" data-desc="Optional. The page number for pagination (default: 1)."></x-field>
+
+  <x-field data-name="pageSize" data-type="number" data-default="50" data-required="false" data-desc="Optional. The number of items per page (default: 50)."></x-field>
+
+  <x-field data-name="order" data-type="string" data-required="false" data-desc="Optional. Sort order (e.g., 'created_at:ASC', 'updated_at:DESC')."></x-field>
+
+  <x-field data-name="activeFirst" data-type="boolean" data-required="false" data-desc="Optional. If true, active products are listed first."></x-field>
 
   **Returns**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `data` | `TProductExpanded[]` | An array of product objects. |
-  | `page` | `number` | The current page number. |
-  | `pageSize` | `number` | The number of items per page. |
-  | `total` | `number` | The total number of products matching the criteria. |
+  <x-field data-name="data" data-type="TProductExpanded[]" data-desc="An array of product objects."></x-field>
+
+  <x-field data-name="page" data-type="number" data-desc="The current page number."></x-field>
+
+  <x-field data-name="pageSize" data-type="number" data-desc="The number of items per page."></x-field>
+
+  <x-field data-name="total" data-type="number" data-desc="The total number of products matching the criteria."></x-field>
 
   **Example**
 
@@ -280,20 +286,21 @@
 
   **Parameters**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `query` | `string` | The search string to match against product fields. |
-  | `page` | `number` | Optional. The page number for pagination (default: 1). |
-  | `pageSize` | `number` | Optional. The number of items per page (default: 50). |
+  <x-field data-name="query" data-type="string" data-required="true" data-desc="The search string to match against product fields."></x-field>
+
+  <x-field data-name="page" data-type="number" data-default="1" data-required="false" data-desc="Optional. The page number for pagination (default: 1)."></x-field>
+
+  <x-field data-name="pageSize" data-type="number" data-default="50" data-required="false" data-desc="Optional. The number of items per page (default: 50)."></x-field>
 
   **Returns**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `data` | `TProductExpanded[]` | An array of product objects that match the search query. |
-  | `page` | `number` | The current page number. |
-  | `pageSize` | `number` | The number of items per page. |
-  | `total` | `number` | The total number of products matching the criteria. |
+  <x-field data-name="data" data-type="TProductExpanded[]" data-desc="An array of product objects that match the search query."></x-field>
+
+  <x-field data-name="page" data-type="number" data-desc="The current page number."></x-field>
+
+  <x-field data-name="pageSize" data-type="number" data-desc="The number of items per page."></x-field>
+
+  <x-field data-name="total" data-type="number" data-desc="The total number of products matching the criteria."></x-field>
 
   **Example**
 
@@ -341,15 +348,11 @@
 
   **Parameters**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `id` | `string` | The unique identifier of the product to archive. |
+  <x-field data-name="id" data-type="string" data-required="true" data-desc="The unique identifier of the product to archive."></x-field>
 
   **Returns**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `product` | `TProduct` | The archived product object. |
+  <x-field data-name="product" data-type="TProduct" data-desc="The archived product object."></x-field>
 
   **Example**
 
@@ -384,15 +387,11 @@
 
   **Parameters**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `id` | `string` | The unique identifier of the product to delete. |
+  <x-field data-name="id" data-type="string" data-required="true" data-desc="The unique identifier of the product to delete."></x-field>
 
   **Returns**
 
-  | Name | Type | Description |
-  |---|---|---|
-  | `product` | `TProduct` | The deleted product object. |
+  <x-field data-name="product" data-type="TProduct" data-desc="The deleted product object."></x-field>
 
   **Example**
 
@@ -420,6 +419,26 @@
   ```
 
   This example permanently deletes a specified product.
+
+  ## Context Types
+
+  When working with context objects, use `<x-field>` components to describe the structure:
+
+  **UserContext**
+
+  <x-field data-name="user" data-type="object" data-required="true" data-desc="Current user information">
+    <x-field data-name="id" data-type="string" data-required="true" data-desc="User unique identifier"></x-field>
+    <x-field data-name="name" data-type="string" data-required="true" data-desc="User display name"></x-field>
+    <x-field data-name="email" data-type="string" data-required="true" data-desc="User email address"></x-field>
+    <x-field data-name="role" data-type="string" data-default="user" data-desc="User role (user, admin, moderator)"></x-field>
+  </x-field>
+
+  <x-field data-name="session" data-type="object" data-required="true" data-desc="Current session information">
+    <x-field data-name="token" data-type="string" data-required="true" data-desc="Session authentication token"></x-field>
+    <x-field data-name="expiresAt" data-type="number" data-required="true" data-desc="Session expiration timestamp"></x-field>
+  </x-field>
+
+  <x-field data-name="permissions" data-type="array" data-required="false" data-desc="User permissions list"></x-field>
 
   ---
 
