@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.8.11](https://github.com/li-yechao/aigne-doc-smith/compare/v0.8.11-beta...v0.8.11) (2025-09-22)
+
 ## [0.8.11-beta](https://github.com/li-yechao/aigne-doc-smith/compare/v0.8.10...v0.8.11-beta) (2025-09-22)
 
 
