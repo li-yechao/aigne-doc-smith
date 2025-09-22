@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.8.11-beta](https://github.com/li-yechao/aigne-doc-smith/compare/v0.8.10...v0.8.11-beta) (2025-09-22)
+
+
+### Bug Fixes
+
+* test 1 ([9944dd2](https://github.com/li-yechao/aigne-doc-smith/commit/9944dd29d9f71719ed8e7f7185acd152e73d2aaa))
+* test2 ([70374f4](https://github.com/li-yechao/aigne-doc-smith/commit/70374f4dd4e73efdbdc999cbc3f80eda73f995cf))
+
 ## [0.8.11-beta](https://github.com/AIGNE-io/aigne-doc-smith/compare/v0.8.10...v0.8.11-beta) (2025-09-22)
 
 
